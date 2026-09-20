@@ -12,6 +12,18 @@ const API_BASE = (() => {
 // 导出给全局使用
 window.API_BASE = API_BASE;
 
+// 公开页面（无需登录即可访问）：在这些页面上收到 401 只能提示错误，
+// 不能把用户强制顶回登录页，否则登录页点「注册 / 忘记密码」会被自己弹回来。
+const PUBLIC_ROUTES = ['#/login', '#/register', '#/forgot_password'];
+
+/**
+ * 当前是否停留在公开页面（登录 / 注册 / 找回密码）
+ * @returns {boolean}
+ */
+function isPublicPage() {
+  return PUBLIC_ROUTES.includes(window.location.hash || '');
+}
+
 /**
  * 统一 API 请求封装
  * @param {string} path - API 路径（如 /api/me）
@@ -44,9 +56,9 @@ async function api(path, options = {}) {
 
   const data = await resp.json();
 
-  // 401 未登录：跳转登录页
+  // 401 未登录：跳转登录页（公开页面自身除外，避免把正在填表的用户弹回登录页）
   if (resp.status === 401) {
-    if (!path.includes('/api/me') && !path.includes('/api/login')) {
+    if (!path.includes('/api/me') && !path.includes('/api/login') && !isPublicPage()) {
       window.location.hash = '#/login';
     }
     throw new Error(data.error || '未登录');

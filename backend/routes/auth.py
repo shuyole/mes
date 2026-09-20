@@ -29,7 +29,6 @@ from common import (
     login_required,
     session_signature,
     sign_in,
-    verify_login,
 )
 
 auth_bp = Blueprint("auth", __name__)
@@ -39,6 +38,23 @@ _CAPTCHA_CHARS = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
 
 def _gen_captcha_code(length=4):
     return "".join(random.choice(_CAPTCHA_CHARS) for _ in range(length))
+
+
+def verify_login(username, password):
+    """校验账号密码与启用状态（认证业务逻辑，属于本蓝图，不再放在 common.py）。
+
+    参数 username：登录账号；参数 password：用户提交的口令，只在本进程内存中使用，不写库、不发往数据库服务。
+    返回：(user, code, message)。成功时 user 为用户字典、code 为 0、message 为 None；
+    失败时 user 为 None，code 为 -2（账号密码错误）/ -3（账号停用）。
+    说明：账号行由 get_user() 经 6060 数据库服务查出（SELECT * FROM users），
+          库中 password_hash 是 werkzeug pbkdf2 哈希，比对在本进程内用 check_password_hash 完成。
+    """
+    user = get_user(username)
+    if not user or not check_password_hash(user["password_hash"], password):
+        return None, -2, "账号或密码错误"
+    if user["status"] != "启用":
+        return None, -3, "账号已被停用，请联系管理员"
+    return user, 0, None
 
 
 @auth_bp.route("/api/login", methods=["POST"])

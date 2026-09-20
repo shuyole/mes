@@ -1,6 +1,6 @@
 # 10 · 后端代码讲解（一）：common.py —— 三个服务共用的基础模块
 
-> 文件位置：`backend/common.py`（约 834 行）
+> 文件位置：`backend/common.py`（约 818 行）
 > 被谁用：`db_server.py`（6060）、`api_server.py`（8080）、`static_server.py`（6021）
 > 三个后端进程都 `from common import ...`。
 > 一句话定位：**全项目的「地基」**——路径常量、配置加载、业务常量（7 工位/产品/计划/工艺）、
@@ -46,7 +46,7 @@ DATA_DIR     = 根目录/data
 
 ---
 
-## 2. 会话代次与仿真倍速（第 112~159 行）
+## 2. 会话代次与仿真倍速（第 111~168 行）
 
 - `_load_session_epoch()`：读 `data/.epoch`（16 字节随机十六进制）。文件不存在就生成并写盘，
   写完还回读一次（防止多个服务首次同时启动各写一份）。**各后端进程读到同一个值，
@@ -59,7 +59,7 @@ DATA_DIR     = 根目录/data
 
 ---
 
-## 3. 工业主数据：工位、产品、节拍（第 161~392 行）
+## 3. 工业主数据：工位、产品、节拍（第 170~392 行）
 
 ### 3.1 STATION_DEFS：7 个工位的完整定义（全项目最重要的常量）
 
@@ -94,7 +94,7 @@ api_server 用它初始化真实产线 LINE 和虚拟产线 VIRTUAL；前端在 
 
 ---
 
-## 4. 数据库访问：SQL 经 HTTP 转发给 6060 数据库服务（第 394~577 行）
+## 4. 数据库访问：SQL 经 HTTP 转发给 6060 数据库服务（第 424~566 行）
 
 > 本节是本次架构调整的重点：**数据库驱动、连接、SQL 方言兼容全部搬到了 `db_server.py`**，
 > common.py 只留「客户端」——把 SQL 包成 JSON 发给 6060，再把结果行还原成 dict/tuple。
@@ -167,7 +167,7 @@ with db_cursor(True) as cursor:          # True：结果行按列名取，返回
 
 ---
 
-## 6. init_db()：向数据库服务请求初始化（第 567~576 行）
+## 6. init_db()：向数据库服务请求初始化（第 568~578 行）
 
 `init_db()` 现在只做两件事：向数据库服务发一次 `POST /db/init`，再把返回的引擎名写回模块级
 `DB_ENGINE`（供 `/api/config` 展示）。建库、建表、补列、写入 admin / PRODUCTS / STATION_DEFS
@@ -179,7 +179,7 @@ with db_cursor(True) as cursor:          # True：结果行按列名取，返回
 
 ---
 
-## 7. 日志与统计查询（第 579~623、791~834 行）
+## 7. 日志与统计查询（第 580~622、775~818 行）
 
 - `add_log(message, order_no="", level="INFO", category="sys")`：往 production_logs 插一条。
   level 取 INFO/WARN/ALARM；category 分 sys（登录等系统事件）和 line（工单/节拍/工位事件）。
@@ -193,7 +193,7 @@ with db_cursor(True) as cursor:          # True：结果行按列名取，返回
 
 ---
 
-## 8. 会话、登录与权限装饰器（第 625~768 行）
+## 8. 会话、登录与权限装饰器（第 624~752 行）
 
 ### 8.1 会话指纹
 
@@ -220,14 +220,14 @@ with db_cursor(True) as cursor:          # True：结果行按列名取，返回
 - `is_admin()`：只看 session 里的 role，不再查库（控制类接口高频调用）。
 - `invalidate_user_cache()`：改完用户信息后清短缓存。
 - `get_user(username)`：缓存优先（TTL 3 秒，返回副本），未命中查库并回填。
-- `verify_login(username, password)`：`(user, code, msg)` 三元组——
-  成功 code=0；账号密码错误 code=-2；账号停用 code=-3。供网页登录和 API 登录共用。
+- `verify_login()` **已移出本模块**：密码比对属于认证业务逻辑，现定义在 `routes/auth.py` 的 `verify_login()` 里
+  （账号行仍由本模块的 `get_user()` 经 6060 数据库服务查出，明文口令不会发给数据库服务）。
 - `list_users()`：全部用户列表（不返回密码哈希）。
 - `sign_in(user)`：登录成功后写 session（logged_in/user_id/username/display_name/role + sign 指纹）。
 
 ---
 
-## 9. 工单号生成（第 770~789 行）
+## 9. 工单号生成（第 754~773 行）
 
 `next_order_no()` 生成形如 `WC20260920-001` 的单号：
 前缀取当天日期，查当天最大流水号 +1（末 3 位），跨天自动从 001 开始；

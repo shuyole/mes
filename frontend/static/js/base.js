@@ -5,6 +5,9 @@
     "use strict";
 
     function updateTopbarStatus() {
+        // 公开页面（登录 / 注册 / 找回密码）不轮询：顶栏状态区在这些页面不显示，
+        // 且未登录时轮询必然 401，会被会话处理逻辑顶回登录页
+        if (isPublicPage()) return;
         fetch("/api/stats").then(function (r) { return r.json(); }).then(function (data) {
             var linePill = document.getElementById("topbarLineStatus");
             var lineText = document.getElementById("topbarLineText");

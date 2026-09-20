@@ -22,15 +22,16 @@ window.fetch = function (url, options) {
     options = options || {};
     options.credentials = 'include';
     return nativeFetch(url, options).then(res => {
-        if (res.status === 401 && !url.includes('/api/me') && !url.includes('/api/login')) {
+        // 401 才跳登录；公开页面（登录/注册/找回密码）上不跳，否则会把正在填表的用户弹回登录页
+        if (res.status === 401 && !isPublicPage() && !url.includes('/api/me') && !url.includes('/api/login')) {
             window.location.hash = '#/login';
         }
         return res;
     });
 };
 
-// 心跳检测：每 5 秒静默探活
-setInterval(() => { fetch('/api/ping').catch(() => {}); }, 5000);
+// 心跳检测：每 5 秒静默探活（公开页面不探活：未登录时必然 401，会把页面顶回登录页）
+setInterval(() => { if (!isPublicPage()) fetch('/api/ping').catch(() => {}); }, 5000);
 
 // 统一的 JSON POST 请求
 function postJSON(url, data) {

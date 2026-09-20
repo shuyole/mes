@@ -20,7 +20,6 @@ from decimal import Decimal
 from functools import wraps
 from threading import Lock
 from flask import abort, jsonify, redirect, request, session, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
 import json
 import os
@@ -33,7 +32,7 @@ import urllib.request
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 # 项目根目录：backend/ 的上一级，config/ 和 data/ 都在这里
 PROJECT_DIR = os.path.dirname(BACKEND_DIR)
-# 前端目录：与 backend/ 同级的 frontend/，存放 Templates（Jinja 模板）与 static（css/js）
+# 前端目录：与 backend/ 同级的 frontend/，存放 Templates（纯 HTML 页面片段）与 static（css/js）
 FRONTEND_DIR = os.path.join(PROJECT_DIR, "frontend")
 # 配置目录：config/config.json
 CONFIG_DIR = os.path.join(PROJECT_DIR, "config")
@@ -725,21 +724,6 @@ def get_user(username):
             _user_cache[username] = (now, user)
         return dict(user)
     return None
-
-
-def verify_login(username, password):
-    """校验账号密码与启用状态。
-
-    返回：(user, code, message)。成功时 user 为用户字典、code 为 0、message 为 None；
-    失败时 user 为 None，code 为 -2（账号密码错误）/ -3（账号停用）。
-    说明：管理员与成员共用同一个登录入口，登录后能看到哪些功能由角色权限决定，与端口无关。
-    """
-    user = get_user(username)
-    if not user or not check_password_hash(user["password_hash"], password):
-        return None, -2, "账号或密码错误"
-    if user["status"] != "启用":
-        return None, -3, "账号已被停用，请联系管理员"
-    return user, 0, None
 
 
 def list_users():
