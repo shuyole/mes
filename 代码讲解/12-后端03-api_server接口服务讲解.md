@@ -1,13 +1,15 @@
 # 12 · 后端代码讲解（三）：api_server.py —— 接口服务 + PLC 通讯 + 产线仿真（8080）
 
-> 文件位置：`backend/api_server.py`（约 1632 行，全项目最大的文件）
+> 文件位置：`backend/api_server.py`（当前约 120 行，接口服务的启动装配入口）
 > 启动：`python api_server.py`
-> 一句话定位：**系统的运行时大脑**。提供全部 `/api/*` JSON 接口，维护 Modbus TCP 通讯，
+> 一句话定位：**系统的运行时大脑**。对外提供全部 `/api/*` JSON 接口，维护 Modbus TCP 通讯，
 > 并在后台线程里持续推进真实/虚拟两条产线的仿真。
+> **数据访问**：本进程不连接数据库（不 import pymysql / sqlite3），启动时先确保 6060 数据库服务就绪，
+> 之后所有 SQL 都通过 `common.db_cursor()` 转发给 6060 执行。
 
 ---
 
-## 1. 应用初始化与全局状态（第 1~93 行）
+## 1. 应用初始化与全局状态（第 1~82 行）
 
 ```python
 app = Flask("mes_api")                 # 纯 JSON 服务，不挂模板和静态目录
@@ -34,6 +36,28 @@ total_reads/total_writes、registers（地址→值快照）、last_fail_ts（�
 - `VIRTUAL_LOGS / VIRTUAL_RECORDS`：虚拟产线的日志和过站记录，**只存内存**（不写库、不写 PLC），
   新的在前，最多各保留 40/30 条；
 - `PLC_REQUIRED_MSG`：未连接 PLC 时控制真实产线的统一报错文案。
+
+### ensure_db_service()：确保 6060 数据库服务就绪
+
+本进程不连接数据库，启动时由这个函数保证下游的数据库服务可用：
+
+```python
+def ensure_db_service():
+    if db_service_alive():       # common.py 提供：GET /db/health 探活
+        return True
+    subprocess.Popen([sys.executable, "db_server.py"], ...)   # 未运行则以子进程拉起
+    for _ in range(20):          # 数据库服务要先探测引擎，最多等 10 秒
+        time.sleep(0.5)
+        if db_service_alive():
+            return True
+    return False                 # 没起来：后续 init_db() 会继续报错并按重试策略处理
+```
+
+- 已在运行就不重复拉起，避免 6060 端口被抢占；子进程带 `CREATE_NO_WINDOW`，不弹黑窗；
+- 这样单独运行 `python api_server.py`（不走 start.bat）也能自动带起数据库服务，
+  与虚拟 PLC 的处理方式一致；
+- 本进程从头到尾不建数据库连接：业务代码里的 `with db_cursor(...) as cursor:` 由 common.py
+  转成对 6060 的 HTTP 调用（`_db_request` / `RemoteCursor`，详见 10 号文档第 4 节）。
 
 ---
 
@@ -145,7 +169,8 @@ registers 快照（逐地址写入）；count=1 返回单值，count>1 返回列
 
 `_run_jobs(jobs)` 依次执行推迟到锁外的 I/O 任务（写库、写 PLC、写日志），单个失败只打印不影响后续。
 **所有慢 I/O 都不能在持有 line_lock 时做**，否则会卡住页面轮询，所以用 functools.partial
-把「要做什么」收集成 jobs，解锁后统一执行。
+把「要做什么」收集成 jobs，解锁后统一执行。写库现在还要多一次到 6060 数据库服务的 HTTP 往返，
+所以「锁内只改内存、锁外才 I/O」这条纪律比直接连库时更不能破。
 
 ### 7.2 _advance_line_locked(jobs, state, write_plc, persist)：推进一拍
 
@@ -258,16 +283,19 @@ start 指令的分支最复杂：指定 order_id 时查库直接下发这一单�
 
 ---
 
-## 10. 启动块（第 1596~1632 行）
+## 10. 启动块（第 85~121 行）
 
 全程 try 兜底，崩溃时把 traceback 写到 `api_crash.log`：
 
-1. `init_db()` 最多重试 6 次、每次间隔 2 秒（MySQL 刚重启可能还没 ready）；
-2. 按当前 PLC IP 决定是否自动拉起虚拟 PLC 子进程；
-3. 启动两个 daemon 线程：`poll_plc_status`（PLC 轮询）与 `line_simulator`（产线仿真）；
-4. `app.run(host=0.0.0.0, port=8080, threaded=True)`。
+1. `ensure_db_service()` 确保 6060 数据库服务已就绪（未运行就自动以子进程拉起并等待探活通过）；
+2. `init_db()` 最多重试 6 次、每次间隔 2 秒——它现在只是向 6060 发一次 `POST /db/init`，
+   但 MySQL 刚重启可能还没 ready，所以保留重试；
+3. 按当前 PLC IP 决定是否自动拉起虚拟 PLC 子进程；
+4. 启动两个 daemon 线程：`poll_plc_status`（PLC 轮询）与 `line_simulator`（产线仿真）；
+5. `app.run(host=0.0.0.0, port=8080, threaded=True)`。
 
-daemon 线程随主进程退出；两个服务里只有本进程跑这两个线程，避免重复推进产线。
+daemon 线程随主进程退出；三个服务里只有本进程跑这两个线程，避免重复推进产线。
+本进程不持有数据库连接，重启 8080 不会影响 6060 上的库连接与会话。
 
 ---
 

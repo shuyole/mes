@@ -70,6 +70,7 @@ start.bat
 - `database.password`：新电脑的 MySQL 密码
 - `frontend_port`：前端页面端口，默认 6021（浏览器访问的就是这个）
 - `backend_port`：后端接口端口，默认 8080（页面内部调用，无需直接访问）
+- `db_service.host` / `db_service.port`：数据库服务地址，默认 `127.0.0.1:6060`（唯一直接连数据库的进程；接口服务通过它执行 SQL）
 - `plc.ip` / `plc.port`：真实 PLC 地址
 
 ## 账号数据会不会一起过去
@@ -83,20 +84,21 @@ start.bat
 
 ```text
 Server/
-  start.bat          一键启动系统（启动 8080 与 6021 并打开浏览器）
+  start.bat          一键启动系统（依次启动 6060 / 8080 / 6021 三个服务并打开浏览器）
   frontend/          前端（纯 HTML + CSS + JS，无服务端模板依赖）
     index.html         系统入口骨架
-    pages/             各业务功能纯 HTML 页面
+    Templates/         各业务功能纯 HTML 页面
     static/            样式与脚本
       css/               各页面样式表
       js/                页面交互与 API 调用脚本
   backend/           后端（Python 服务）
-    api_server.py      后端接口服务（8080 端口，数据库/PLC/业务逻辑）
+    db_server.py       数据库服务（6060 端口，唯一直接连数据库）
+    api_server.py      后端接口服务（8080 端口，PLC 与业务逻辑，SQL 转交 6060）
     static_server.py   前端静态托管服务（6021 端口）
-    common.py          共享模块：配置 / 数据库 / 会话
+    common.py          共享模块：配置 / 会话 / 数据库访问客户端
     virtual_plc.py     虚拟 PLC 仿真
   config/            配置文件
-    config.json        数据库 / 端口 / PLC 配置
+    config.json        数据库 / 端口 / 数据库服务 / PLC 配置
   data/              运行时数据（含 SQLite mes.db）
-    .epoch             会话代次文件（两进程共享）
+    .epoch             会话代次文件（各服务共享）
 ```

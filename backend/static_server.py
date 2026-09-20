@@ -50,7 +50,7 @@ def serve_spa(path):
 
 if __name__ == "__main__":
     host = CONFIG.get("host") or "0.0.0.0"
-    print(f"前端静态文件服务已启动： http://10.144.11.105:{FRONTEND_PORT}")
+    print(f"前端静态文件服务已启动： http://127.0.0.1:{FRONTEND_PORT}")
     print(f"  提供目录: {FRONTEND_DIR}")
     print(f"  所有 API 请求请直接访问后端服务（8080 端口）")
     app.run(host=host, port=FRONTEND_PORT, threaded=True)
