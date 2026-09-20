@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账号注册 - 用户认证系统</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body>
+<!-- 注册页：填写账号、显示名称、学号与密码 -->
+<canvas id="particles-bg"></canvas>
+
+<div class="register-page">
+    <div class="login-header">
+        <div class="login-header-icon">AUTH</div>
+        <div>
+            <div class="login-header-title">用户认证系统</div>
+            <div class="login-header-sub">统一身份认证 / Authentication System</div>
+        </div>
+        <span class="login-header-tag">NEW ACCOUNT</span>
+    </div>
+
+    <div class="register-card">
+        <div class="register-card-top"></div>
+        <div class="register-card-body">
+            <div class="register-card-title">创建账号</div>
+            <div class="register-card-sub">CREATE NEW ACCOUNT · 填写以下信息完成注册</div>
+
+            <div class="error-msg" role="alert" id="registerError" style="display:none;"></div>
+            <div class="success-msg" role="status" id="registerOk" style="display:none;"></div>
+
+            <form id="registerForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="reg_username">账号 USERNAME</label>
+                    <input type="text" id="reg_username" name="username" placeholder="3-20 位字母数字下划线" data-hint="请输入账号" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_display_name">显示名称 DISPLAY NAME</label>
+                    <input type="text" id="reg_display_name" name="display_name" placeholder="例如：张工">
+                </div>
+                <div class="form-group">
+                    <label for="reg_student_id">学号 STUDENT ID <span class="hint">（找回密码用，请牢记）</span></label>
+                    <input type="text" id="reg_student_id" name="student_id" placeholder="4-20 位字母或数字" data-hint="请输入学号" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_password">密码 PASSWORD</label>
+                    <input type="password" id="reg_password" name="password" placeholder="至少 6 位" data-hint="请输入密码" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_confirm">确认密码 CONFIRM</label>
+                    <input type="password" id="reg_confirm" name="confirm" placeholder="再次输入密码" data-hint="请再次输入密码" required>
+                </div>
+                <button type="submit" class="register-submit">注 册 账 号</button>
+            </form>
+
+            <div class="register-footer">
+                已有账号？<a href="/login">返回登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/particles.js"></script>
+<script src="/static/js/register.js"></script>
+</body>
+</html>

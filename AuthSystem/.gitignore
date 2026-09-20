@@ -1,0 +1,14 @@
+# Python 运行时产物
+__pycache__/
+*.pyc
+
+# 运行时生成的 SQLite 数据库与会话代次文件
+data/
+
+# 虚拟环境
+.venv/
+venv/
+
+# ===== 敏感文件，禁止提交 =====
+# 含本地数据库明文口令，复制 config.example.json 为 config.json 后自行填写
+config/config.json

@@ -1,0 +1,41 @@
+/* base.css —— 全站基础样式：主题变量、重置与共享提示条 */
+
+:root {
+    --cyan: #22d3ee;
+    --text: #e2e8f0;
+    --muted: #6b8ea3;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #040a18;
+    min-height: 100vh;
+}
+
+a { color: inherit; }
+
+/* 共享提示条：错误（红）与成功（绿），各页面按需显示 */
+.error-msg {
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 8px;
+}
+
+.success-msg {
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 8px;
+}

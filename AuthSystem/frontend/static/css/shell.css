@@ -1,0 +1,465 @@
+/* shell.css —— 登录后主页/设置页的外壳样式（复用原 MES 深色工业风）
+   包含：主题变量、基础重置、左侧菜单 + 顶栏 + 内容区骨架、面板/表单/按钮/弹窗等通用组件。 */
+
+/* ===== 全局主题变量：深色工业风配色、圆角与阴影 ===== */
+:root {
+    --bg: #070b14;
+    --bg-elevated: #0c1220;
+    --panel: rgba(14, 22, 40, 0.92);
+    --panel-solid: #0e1628;
+    --line: rgba(34, 211, 238, 0.18);
+    --line-strong: rgba(34, 211, 238, 0.45);
+    --cyan: #22d3ee;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --text: #e2e8f0;
+    --muted: #8ba0b8;
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    --radius: 14px;
+}
+
+/* ===== 基础重置与页面背景：深色渐变底 + 固定网格纹理 ===== */
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    color: var(--text);
+    font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(34, 211, 238, 0.12), transparent 50%),
+        radial-gradient(900px 400px at 100% 0%, rgba(167, 139, 250, 0.10), transparent 46%),
+        linear-gradient(180deg, #070b14 0%, #0a1020 100%);
+    min-height: 100vh;
+}
+
+/* 全屏网格纹理：固定定位且不拦截鼠标事件，仅作装饰 */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(34, 211, 238, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    z-index: 0;
+}
+
+a { color: inherit; }
+
+/* ===== 左侧菜单 + 右侧工作区 ===== */
+.app-shell {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 228px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px 18px;
+    background: linear-gradient(180deg, #0a1628 0%, #07101d 100%);
+    border-right: 1px solid var(--line);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px 16px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+}
+
+.sidebar-brand h1 {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.sidebar-brand .brand-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+}
+
+.sidebar-brand p {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: #062027;
+    background: linear-gradient(135deg, #67e8f9, #22d3ee 55%, #38bdf8);
+    box-shadow: 0 0 18px rgba(34, 211, 238, 0.45);
+}
+
+.sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+
+.side-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: #c5d4e8;
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid transparent;
+    transition: 0.15s ease;
+}
+
+.side-link:hover {
+    color: #fff;
+    background: rgba(34, 211, 238, 0.08);
+}
+
+.side-link.active {
+    color: #fff;
+    background: rgba(34, 211, 238, 0.16);
+    border-color: rgba(34, 211, 238, 0.4);
+    box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.15);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding: 20px 10px 4px;
+    font-size: 11px;
+    color: #6f93a2;
+    border-top: 1px solid var(--line);
+}
+.sidebar-footer strong { display: block; color: var(--cyan); font-weight: 600; margin-bottom: 4px; }
+
+/* 侧边栏分组标题 */
+.nav-group-caption {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: #52677d;
+    padding: 14px 10px 4px;
+    text-transform: uppercase;
+}
+
+/* 侧边栏 SVG 图标 */
+.nav-svg-icon {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+.side-link:hover .nav-svg-icon { transform: scale(1.12); }
+.side-link.active .nav-svg-icon {
+    stroke: var(--cyan);
+    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.6));
+}
+
+.workspace {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 58px;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(6, 14, 28, 0.82);
+    backdrop-filter: blur(16px);
+    flex-wrap: wrap;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--cyan); }
+
+.topbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.page-content {
+    flex: 1;
+    padding: 18px 22px 32px;
+    max-width: 1680px;
+}
+
+/* 右上角用户信息区：用户名与顶栏时钟（等宽字体显示） */
+.user-box {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.clock {
+    font-family: Consolas, "Courier New", monospace;
+    color: var(--cyan);
+    letter-spacing: 1px;
+}
+
+.user-box b { color: var(--green); }
+
+/* ===== 页面标题区 ===== */
+.page-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 0 22px; }
+.page-eyebrow { font: 11px Consolas, monospace; color: var(--cyan); margin-bottom: 6px; letter-spacing: 0.18em; }
+.page-heading h1 { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.35; text-shadow: 0 0 24px rgba(34, 211, 238, 0.18); }
+.page-context { color: var(--muted); font-size: 12px; text-align: right; }
+.page-context b { display: block; color: #c8e8f4; font-weight: 600; }
+
+/* ===== 角色标签：管理员实心青色胶囊、普通成员琥珀描边胶囊 ===== */
+.role-chip {
+    display: inline-flex;
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+.role-chip.admin { color: #062027; background: linear-gradient(135deg, #67e8f9, #22d3ee); }
+.role-chip.member { color: var(--amber); background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.45); }
+
+/* ===== 按钮：默认描边青色，另有实心/红等语义变体 ===== */
+.btn, button.btn, a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--cyan);
+    padding: 9px 14px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+.btn:hover { background: rgba(34, 211, 238, 0.12); box-shadow: 0 0 16px rgba(34, 211, 238, 0.18); }
+.btn-solid { background: linear-gradient(135deg, #22d3ee, #38bdf8); color: #062027; border: none; font-weight: 700; }
+.btn-solid:hover { filter: brightness(1.08); color: #062027; }
+.btn-red { color: var(--red); border-color: rgba(248, 113, 113, 0.5); }
+.btn-red:hover { background: rgba(248, 113, 113, 0.12); }
+.btn-logout { color: var(--red); text-decoration: none; }
+.btn.is-busy { opacity: 0.7; pointer-events: none; }
+
+/* ===== 栅格布局工具类 ===== */
+.stats-grid, .grid-4, .grid-3, .grid-2 {
+    display: grid;
+    gap: 20px;
+}
+.stats-grid, .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-2 > *, .grid-3 > *, .grid-4 > *, .stats-grid > * { min-width: 0; }
+
+/* ===== 卡片/面板通用外观：半透明底 + 描边 + 阴影 ===== */
+.card, .panel, .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+}
+
+/* ===== 统计卡片：左侧彩色竖条区分指标类型 ===== */
+.stat-card {
+    padding: 18px 18px 16px;
+    position: relative;
+    overflow: hidden;
+}
+.stat-card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+}
+.stat-card.cyan::before { background: var(--cyan); }
+.stat-card.amber::before { background: var(--amber); }
+.stat-card.green::before { background: var(--green); }
+.stat-card.purple::before { background: var(--purple); }
+.stat-card.blue::before { background: var(--blue); }
+.stat-card.red::before { background: var(--red); }
+.stat-label { color: var(--muted); font-size: 12px; letter-spacing: 1px; }
+.stat-value {
+    margin-top: 8px;
+    font-size: 30px;
+    font-family: Consolas, monospace;
+    font-weight: 700;
+}
+.stat-card.cyan .stat-value { color: var(--cyan); }
+.stat-card.amber .stat-value { color: var(--amber); }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.purple .stat-value { color: var(--purple); }
+.stat-card.blue .stat-value { color: var(--blue); }
+.stat-card.red .stat-value { color: var(--red); }
+.stat-sub { margin-top: 6px; color: var(--muted); font-size: 12px; }
+
+/* ===== 面板内边距与区块标题：标题左侧有一道发光青色竖条 ===== */
+.panel { padding: 20px 18px; }
+.panel h2, .card h2, .section-title {
+    margin: 0 0 16px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.panel h2::before, .section-title::before {
+    content: "";
+    width: 4px;
+    height: 16px;
+    border-radius: 4px;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+/* ===== 表单：标签青色小字，输入框深底描边，聚焦时青色高亮 ===== */
+.form-group { margin-bottom: 14px; }
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--cyan);
+    font-size: 12px;
+    letter-spacing: 0.8px;
+}
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: rgba(2, 6, 16, 0.7);
+    color: #fff;
+    outline: none;
+}
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+}
+
+/* 描述性小字 */
+.hint { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 0 0 14px; }
+
+/* 空数据占位 */
+.empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 42px 16px;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* 信息表：键值两列 */
+.info-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.info-table th {
+    width: 120px;
+    text-align: left;
+    padding: 9px 0;
+    color: var(--muted);
+    font-weight: 400;
+    vertical-align: top;
+}
+.info-table td { padding: 9px 0; color: #dbe7f3; }
+
+/* ===== 站内弹窗：默认隐藏，加 open 类后显示并带半透明遮罩 ===== */
+.modal-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(2, 6, 16, 0.72);
+    backdrop-filter: blur(4px);
+}
+.modal-mask.open { display: flex; }
+
+.modal-box {
+    width: min(400px, 100%);
+    padding: 22px;
+    border-radius: 10px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel-solid);
+    box-shadow: 0 0 40px rgba(34, 211, 238, 0.15);
+}
+.modal-box h3 { margin: 0 0 10px; font-size: 16px; color: var(--cyan); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.modal-actions .btn { min-width: 84px; min-height: 38px; }
+
+/* 弹窗内表单 */
+.modal-form .form-group { margin-bottom: 14px; }
+.modal-form .form-group label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+.modal-form .form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: rgba(2, 6, 16, 0.7);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+}
+.modal-form .form-group input:focus { border-color: var(--cyan); }
+
+/* 弹窗内提示消息（错误/成功） */
+.modal-msg {
+    min-height: 20px;
+    margin: 4px 0 12px;
+    font-size: 13px;
+    color: var(--muted);
+}
+.modal-msg.error { color: var(--red); }
+.modal-msg.success { color: var(--green); }
+
+/* 设置页专用小样式 */
+.settings-link { color: var(--cyan); }
+.role-admin { color: var(--cyan); }
+.role-member { color: var(--amber); }
+.settings-stack { margin-top: 16px; }
+
+/* ===== 窄屏适配：侧边栏转为顶部横向菜单 ===== */
+@media (max-width: 900px) {
+    .app-shell { flex-direction: column; }
+    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--line); }
+    .sidebar-footer { display: none; }
+    .sidebar-nav { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; }
+    .side-link { flex-shrink: 0; padding: 8px 10px; }
+    .nav-group-caption { display: none; }
+    .grid-2, .grid-3, .grid-4, .stats-grid { grid-template-columns: minmax(0, 1fr); }
+    .page-heading { gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .page-heading h1 { font-size: 22px; }
+    .page-context { text-align: left; }
+    .page-content { padding: 20px 16px 28px; }
+}
