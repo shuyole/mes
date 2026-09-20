@@ -1,0 +1,66 @@
+<!-- recipes.html — 工艺配方节拍页面片段 -->
+<div class="panel takt-panel js-rise">
+    <h2>客户需求与节拍时间</h2>
+    <p class="hint" id="taktHint">客户需求 1200 件/天。额定上班 8 小时，午餐 60 分钟 + 休息 20 分钟，每班净可用 24000 秒；每天 2 班共 48000 秒。</p>
+    <div class="takt-track">
+        <div class="takt-net"></div>
+        <div class="takt-rest"></div>
+    </div>
+    <p class="takt-formula" id="taktFormula">节拍 = 48000 ÷ 1200 = <b>24 秒/件</b></p>
+    <div class="craft-wrap">
+        <h3>产品装配工艺</h3>
+        <ol class="craft-sequence" aria-label="产品装配工艺顺序">
+            <li>治具板准备</li>
+            <li>主板安装</li>
+            <li>后盖安装</li>
+            <li>螺丝锁附</li>
+            <li>激光打标</li>
+            <li>成品检测</li>
+        </ol>
+    </div>
+</div>
+
+<div class="grid-2 recipes-stack">
+    <div class="panel js-rise">
+        <h2>产品配方 / 节拍与技术参数</h2>
+        <p class="hint">配方对应产品型号、额定无线充电功率、线圈数与整线理论节拍。</p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>产品编码</th>
+                        <th>名称</th>
+                        <th>功率/线圈</th>
+                        <th>理论节拍</th>
+                    </tr>
+                </thead>
+                <tbody id="recipesProductsBody">
+                    <tr><td colspan="4" class="empty">正在加载产品配方...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel js-rise">
+        <h2>工艺工位配方与控制参数</h2>
+        <p class="hint">无线充标准7工位工艺流程，集成PLC寄存器映射与传感器检测参数。</p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>工位</th>
+                        <th>工艺名称</th>
+                        <th>节拍</th>
+                        <th>PLC地址</th>
+                        <th>诊断</th>
+                    </tr>
+                </thead>
+                <tbody id="recipesStationsBody">
+                    <tr><td colspan="5" class="empty">正在加载工位配方...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="./static/js/recipes.js"></script>

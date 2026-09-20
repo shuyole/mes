@@ -1,0 +1,18 @@
+/* base.css —— 全站母版 base.html 专属样式
+   全局组件样式在 app.css / console.css；本文件只放母版骨架的小幅专属样式
+   （顶栏标题行、工位诊断抽屉加载占位），类名带母版语义，避免污染页面组件。 */
+
+/* 顶栏标题行：标题 + 产线状态横向排列（从 base.html 内联样式抽离） */
+.topbar-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+/* 工位诊断抽屉加载占位 */
+.drawer-loading {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--muted, #6b8ea3);
+}

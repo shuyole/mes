@@ -1,0 +1,68 @@
+/* orders.css —— 作业指示 / 工单排产页（orders.html）专属样式 */
+
+/* 面板标题行：标题与右侧辅助按钮两端对齐 */
+.orders-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.orders-panel-head h2 { margin: 0; }
+.orders-head-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* 青色描边小工具钮（填入范例 / 批量演示） */
+.tool-cyan {
+    color: var(--cyan, #22d3ee);
+    border-color: rgba(34, 211, 238, 0.4);
+}
+
+/* 产品技术规格联动说明框（orders.js 填充） */
+.product-spec-box {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: rgba(14, 24, 46, 0.7);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--muted, #6b8ea3);
+    line-height: 1.5;
+}
+.product-spec-title {
+    color: #d6f6ff;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* 建单提交按钮整行宽 */
+.order-submit {
+    width: 100%;
+    min-height: 44px;
+}
+
+/* 工具条搜索框定宽 */
+.orders-toolbar .search-box {
+    width: 200px;
+}
+
+/* 工单号等宽列 */
+.mono-cell {
+    font-family: Consolas, monospace;
+}
+
+/* 导出 CSV 链接形态 */
+.csv-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+}
+
+/* 排产队列底部说明 */
+.orders-footnote {
+    margin-top: 14px;
+}

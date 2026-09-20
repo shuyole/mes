@@ -1,0 +1,28 @@
+精简版 MES — 其他电脑需要安装的应用
+================================
+
+【必须】
+1. Python 3.10 或更高版本
+   下载：https://www.python.org/downloads/
+   安装时务必勾选：Add python.exe to PATH
+
+2. 浏览器
+   Edge 或 Chrome 均可，用来打开 http://127.0.0.1:6021
+
+【可选】
+3. MySQL 8
+   下载：https://dev.mysql.com/downloads/mysql/
+   有 MySQL：系统自动建库 mes_db（默认 root / 123456）
+   没有 MySQL：系统自动用本地文件数据库，功能一样
+
+【不需要单独安装】
+- Flask、PyMySQL、pymodbus  → 双击 install.bat 会按 requirements.txt 自动安装
+- Node.js、Java、Redis
+- PLC 编程软件（产线可本地仿真）
+
+【新电脑步骤】
+1. 安装 Python
+2. 拷贝本文件夹（不要拷 .venv）
+3. 双击 install.bat
+4. 双击 start.bat
+5. 浏览器打开 http://127.0.0.1:6021

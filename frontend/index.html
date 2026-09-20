@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MES 制造执行系统</title>
+    <link rel="stylesheet" href="./static/css/app.css">
+    <link rel="stylesheet" href="./static/css/console.css">
+    <link rel="stylesheet" href="./static/css/base.css">
+    <link rel="stylesheet" href="./static/css/home.css">
+    <link rel="stylesheet" href="./static/css/orders.css">
+    <link rel="stylesheet" href="./static/css/line.css">
+    <link rel="stylesheet" href="./static/css/production.css">
+    <link rel="stylesheet" href="./static/css/hmi.css">
+    <link rel="stylesheet" href="./static/css/station_st01.css">
+    <link rel="stylesheet" href="./static/css/alarms.css">
+    <link rel="stylesheet" href="./static/css/recipes.css">
+    <link rel="stylesheet" href="./static/css/settings.css">
+    <link rel="stylesheet" href="./static/css/users.css">
+    <link rel="stylesheet" href="./static/css/login.css">
+    <link rel="stylesheet" href="./static/css/register.css">
+    <link rel="stylesheet" href="./static/css/forgot_password.css">
+    <link rel="stylesheet" href="./static/css/monitor.css">
+</head>
+<body data-page="">
+
+<!-- 全页面容器：登录/注册/找回密码使用（不显示侧边栏和顶栏） -->
+<div id="fullPageContainer" style="display:none;"></div>
+
+<!-- SPA 应用壳：侧边栏 + 工作区 -->
+<div class="app-shell" id="appShell" style="display:none;">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-mark">MES</div>
+            <div>
+                <h1>智能无线充</h1>
+                <p>工业柔性装配线 MES</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="主导航">
+            <div class="nav-group-caption">生产监控 / MONITORING</div>
+            <a href="#/home" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>数据采集&amp;看板</span>
+            </a>
+            <a href="#/line" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <span>在制实时追踪</span>
+            </a>
+            <a href="#/virtual" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                <span>虚拟仿真产线</span>
+            </a>
+
+            <div class="nav-group-caption">生产执行 / EXECUTION</div>
+            <a href="#/orders" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="M9 12l2 2 4-4"></path></svg>
+                <span>作业指示排产</span>
+            </a>
+            <a href="#/production" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                <span>品质追溯分析</span>
+            </a>
+            <a href="#/recipes" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>工艺配方节拍</span>
+            </a>
+
+            <div class="nav-group-caption">设备控制 / SCADA</div>
+            <a href="#/station_st01" class="side-link" data-admin-only>
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><rect x="8" y="13" width="3" height="7"></rect><rect x="14" y="13" width="3" height="7"></rect></svg>
+                <span>ST01 自动上料</span>
+            </a>
+            <a href="#/hmi" class="side-link" data-admin-only>
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>
+                <span>设备上位机主控</span>
+            </a>
+            <a href="#/alarms" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span>异常发生管理</span>
+            </a>
+
+            <div class="nav-group-caption">系统管理 / SYSTEM</div>
+            <a href="#/settings" class="side-link" data-admin-only>
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                <span>基础数据配置</span>
+            </a>
+            <a href="#/users" class="side-link" data-admin-only>
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>用户权限管理</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer"><strong>无线充柔性线</strong>加载中...</div>
+    </aside>
+
+    <div class="workspace">
+        <div class="topbar">
+            <div class="topbar-title-row">
+                <div class="topbar-title">智能制造执行系统</div>
+            </div>
+
+            <div class="topbar-controls">
+                <!-- 产线动态状态指示器 -->
+                <div class="live-status-pill idle" id="topbarLineStatus" title="产线运行状态">
+                    <span class="status-dot"></span>
+                    <span id="topbarLineText">状态检测中</span>
+                </div>
+
+                <!-- 仿真倍速快速调节 -->
+                <div class="sim-speed-box" title="产线仿真节拍倍速调节 (教学调试专用)">
+                    <span class="sim-speed-label">倍速:</span>
+                    <button type="button" class="speed-btn active" data-speed="1" onclick="setSimSpeed(1)">1x</button>
+                    <button type="button" class="speed-btn" data-speed="2" onclick="setSimSpeed(2)">2x</button>
+                    <button type="button" class="speed-btn" data-speed="5" onclick="setSimSpeed(5)">5x</button>
+                    <button type="button" class="speed-btn" data-speed="10" onclick="setSimSpeed(10)">10x</button>
+                </div>
+
+                <!-- 工业音效开关 -->
+                <button type="button" class="top-tool-btn active" id="audioToggleBtn" onclick="toggleAudioMute()" title="快捷键: M 键切换">
+                    <svg class="nav-svg-icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    <span>音效</span>
+                </button>
+
+                <!-- 车间大屏展示切换 -->
+                <button type="button" class="top-tool-btn" id="fullscreenToggleBtn" onclick="toggleFullscreen()" title="快捷键: F 键全屏">
+                    <svg class="nav-svg-icon" viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                    <span>大屏模式</span>
+                </button>
+
+                <!-- 系统设置入口 -->
+                <a class="top-tool-btn" href="#/settings" title="系统设置与修改密码">
+                    <svg class="nav-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    <span>设置</span>
+                </a>
+
+                <div class="user-box">
+                    <span class="clock" id="clock">--:--:--</span>
+                    <span>操作员 <b>加载中</b>
+                        <span class="role-chip member">--</span>
+                    </span>
+                    <a class="btn-logout" href="javascript:void(0)" onclick="logout()">退出</a>
+                </div>
+            </div>
+        </div>
+
+        <main class="page-content" id="mainContent">
+            <div class="empty">正在加载页面...</div>
+        </main>
+    </div>
+</div>
+
+<!-- 站内通用操作确认弹窗 -->
+<div class="modal-mask" id="confirmMask">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <h3 id="confirmTitle">操作确认</h3>
+        <p id="confirmText">确定要执行该操作吗？</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-solid" id="confirmOk">确定</button>
+            <button type="button" class="btn" id="confirmCancel">取消</button>
+        </div>
+    </div>
+</div>
+
+<!-- 工位深度诊断抽屉 -->
+<div class="drawer-mask" id="stationDrawerMask" onclick="if(event.target===this)closeStationDrawer()">
+    <div class="drawer-content" role="dialog" aria-modal="true" aria-labelledby="drawerStationTitle">
+        <div class="drawer-header">
+            <h3 id="drawerStationTitle">工位诊断</h3>
+            <button type="button" class="drawer-close" onclick="closeStationDrawer()" aria-label="关闭">&times;</button>
+        </div>
+        <div class="drawer-body" id="drawerStationBody">
+            <div class="drawer-loading">正在加载工位实时数据...</div>
+        </div>
+    </div>
+</div>
+
+<!-- 全局 Toast 容器 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- 核心脚本：顺序加载 -->
+<script src="./static/js/api.js"></script>
+<script src="./static/js/auth.js"></script>
+<script src="./static/js/form.js"></script>
+<script src="./static/js/app.js"></script>
+<script src="./static/js/base.js"></script>
+<script src="./static/js/router.js"></script>
+
+<!-- 页面脚本：注册初始化函数 -->
+<script src="./static/js/login.js"></script>
+<script src="./static/js/register.js"></script>
+<script src="./static/js/forgot_password.js"></script>
+<script src="./static/js/home.js"></script>
+<script src="./static/js/line.js"></script>
+<script src="./static/js/orders.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="./static/js/production.js"></script>
+<script src="./static/js/hmi.js"></script>
+<script src="./static/js/station_st01.js"></script>
+<script src="./static/js/alarms.js"></script>
+<script src="./static/js/recipes.js"></script>
+<script src="./static/js/settings.js"></script>
+<script src="./static/js/users.js"></script>
+<script src="./static/js/progress.js"></script>
+
+<script>
+// 应用启动
+(async function boot() {
+  const user = await getCurrentUser();
+  if (user) {
+    await updateSidebar();
+  }
+  initRouter();
+})();
+</script>
+</body>
+</html>

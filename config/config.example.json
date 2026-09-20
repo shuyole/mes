@@ -1,0 +1,22 @@
+{
+  "host": "0.0.0.0",
+  "frontend_port": 6021,
+  "backend_port": 8080,
+  "db_service": {
+    "host": "127.0.0.1",
+    "port": 6060
+  },
+  "secret_key": "请改成你自己的随机字符串",
+  "database": {
+    "type": "auto",
+    "host": "localhost",
+    "user": "root",
+    "password": "你的数据库密码",
+    "name": "mes_db",
+    "port": 3306
+  },
+  "plc": {
+    "ip": "127.0.0.1",
+    "port": 502
+  }
+}

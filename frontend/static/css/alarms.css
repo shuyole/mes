@@ -1,0 +1,38 @@
+/* alarms.css —— 异常发生管理页（alarms.html）专属样式
+   四个故障处理按钮的内联样式收敛于此；按钮事件由 alarms.js 委托绑定。 */
+
+/* 页面三张面板统一上间距 */
+.alarm-stack {
+    margin-top: 16px;
+}
+
+/* 故障处理按钮行 */
+.alarm-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+/* 清除故障按钮：绿色描边（其余三种颜色用全局 .btn-red/.btn-amber/.btn） */
+.btn.btn-clear {
+    border-color: rgba(52, 211, 153, 0.4);
+    color: #34d399;
+}
+.btn.btn-clear:hover {
+    background: rgba(52, 211, 153, 0.10);
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
+}
+
+/* 告警日志列表限高滚动 */
+.alarm-log-list {
+    max-height: 420px;
+}
+
+/* KPI 卡中大小数字的页内字号覆盖 */
+.alarm-stat-robot {
+    font-size: 22px;
+}
+.alarm-stat-sla {
+    font-size: 18px;
+}

@@ -1,0 +1,107 @@
+<!-- virtual.html — 虚拟仿真产线页面片段 -->
+<div class="panel">
+    <h2>虚拟产线 / 本地仿真</h2>
+    <p class="hint" id="lineHint">
+        虚拟车间：对生产过程仿真优化，不写 PLC。调试阶段模拟运行状态，降低调试成本。
+    </p>
+    <div class="twin-grid">
+        <div class="twin-box phy">
+            <h3>物理车间</h3>
+            <p>真实设备与 PLC。作业指示下发后，由在制追踪 / 设备管理联机执行。</p>
+        </div>
+        <div class="twin-box vir">
+            <h3>虚拟车间</h3>
+            <p>本地仿真 7 工位与节拍。用于准备阶段优化方案、加工阶段对比作业流程。</p>
+        </div>
+    </div>
+    <!-- 选项卡按钮组 -->
+    <div class="tabs">
+        <button class="tab active" data-tab="flow">工位流程</button>
+        <button class="tab" data-tab="plc">PLC 联机</button>
+        <button class="tab" data-tab="robot">机械臂协同</button>
+        <button class="tab" data-tab="trace">质量追溯</button>
+    </div>
+
+    <!-- 选项卡内容一：7 工位流程编排 -->
+    <div class="tab-panel active" id="tab-flow">
+        <p class="line-meta">
+            当前工单 <b id="lineOrder">空闲</b>
+            ｜ <span id="lineProduct">等待下发</span>
+            ｜ 进度 <span id="lineProgress">0/0</span>
+            ｜ 节拍 <span id="linePiece">0%</span>
+        </p>
+        <div class="process-rail" id="lineProcess"></div>
+        <div class="conveyor-belt-animated" title="主传输带运行流 (点击任意工位卡片可打开传感器诊断抽屉)"></div>
+        <div class="factory-stage">
+            <div class="factory-line" id="lineStations"></div>
+        </div>
+        <!-- 工位流程操作区 -->
+        <div class="line-actions">
+            <div data-admin-only style="display:inline;">
+                <button class="btn btn-solid" onclick="sendCommand('start')">▶ 启动编排</button>
+                <button class="btn btn-amber" onclick="sendCommand('stop')">⏸ 暂停</button>
+                <button class="btn" onclick="sendCommand('reset')">↺ 复位工位</button>
+                <button class="btn btn-fault" onclick="injectFaultST('ST04')">⚡ 演练: 注入ST04故障</button>
+                <button class="btn btn-clear" onclick="clearFaultST()">✓ 恢复清除故障</button>
+            </div>
+            <p class="hint" data-member-only style="display:none;">普通成员可查看工位流程，启动/暂停/复位需管理员操作。</p>
+            <button class="btn btn-demo" onclick="seedDemoOrders()">⚡ 生成演示工单</button>
+            <a class="btn" href="#/orders">返回作业指示</a>
+            <a class="btn" href="#/line">真实在制追踪</a>
+        </div>
+    </div>
+
+    <!-- 选项卡内容二：PLC 联机说明与保持寄存器映射表 -->
+    <div class="tab-panel" id="tab-plc">
+        <p class="tab-note">虚拟页只演示流程，不写 PLC 寄存器。</p>
+        <div class="table-responsive" role="region" aria-label="产线数据明细" tabindex="0">
+        <table>
+            <thead><tr><th>寄存器</th><th>含义</th><th>说明</th></tr></thead>
+            <tbody>
+                <tr><td>HR0</td><td>产线状态</td><td>0 停止 / 1 运行 / 2 完成 / 3 故障</td></tr>
+                <tr><td>HR1</td><td>当前工位</td><td>1 自动上料 … 7 自动下料</td></tr>
+                <tr><td>HR2 / HR4 / HR5</td><td>产量数据</td><td>当前产量、合格、不良</td></tr>
+                <tr><td>HR6</td><td>机械臂</td><td>0 待机 / 1 运行 / 2 故障</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <!-- 选项卡内容三：机械臂协同 -->
+    <div class="tab-panel" id="tab-robot">
+        <div class="grid-3">
+            <div class="stat-card cyan"><div class="stat-label">机械臂状态</div><div class="stat-value" id="robotState">待机</div></div>
+            <div class="stat-card amber"><div class="stat-label">当前位置</div><div class="stat-value" id="robotPos">HOME</div></div>
+            <div class="stat-card purple"><div class="stat-label">当前任务</div><div class="stat-value robot-task-value" id="robotTask">空闲</div></div>
+        </div>
+        <p class="tab-note">机械臂负责上料、工位转运和测试后下料。急停时进入故障，复位后回到 HOME。</p>
+    </div>
+
+    <!-- 选项卡内容四：质量追溯 -->
+    <div class="tab-panel" id="tab-trace">
+        <div class="trace-head">
+            <p>各工位实时质检与测试记录形成闭环质量追溯链</p>
+            <a id="traceCsvLink" href="javascript:void(0)" onclick="exportTraceCSV()" class="top-tool-btn csv-link">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                导出质量追溯链 (CSV)
+            </a>
+        </div>
+        <div class="table-responsive" role="region" aria-label="产线数据明细" tabindex="0">
+        <table>
+            <thead><tr><th>时间</th><th>工单</th><th>工位</th><th>合格</th><th>不良</th><th>判定</th></tr></thead>
+            <tbody id="traceBody"></tbody>
+        </table>
+        </div>
+        <div class="empty" id="traceEmpty" style="display:none;">启动产线后，每个工位的作业记录会在这里形成质量追溯链。</div>
+    </div>
+</div>
+
+<!-- 运行日志 -->
+<div class="panel line-stack">
+    <h2>运行日志</h2>
+    <div class="log-list" id="logList">
+        <div class="empty">产线运行后，这里会记录工单、进度、节拍和当前工位。</div>
+    </div>
+</div>
+
+<script src="./static/js/line.js"></script>

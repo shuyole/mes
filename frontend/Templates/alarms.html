@@ -1,0 +1,46 @@
+<!-- alarms.html — 异常发生管理页面片段 -->
+<div class="stats-grid">
+    <div class="stat-card green" id="cardAlarm">
+        <div class="stat-label">当前故障</div>
+        <div class="stat-value" id="alarmVal">正常</div>
+        <div class="stat-sub" id="alarmMsg">无急停 / 互锁故障</div>
+    </div>
+    <div class="stat-card amber">
+        <div class="stat-label">产线状态</div>
+        <div class="stat-value" id="lineStateVal">停止</div>
+        <div class="stat-sub" id="lineOrderVal">工单 空闲</div>
+    </div>
+    <div class="stat-card cyan">
+        <div class="stat-label">机械臂</div>
+        <div class="stat-value alarm-stat-robot" id="robotStateVal">待机</div>
+        <div class="stat-sub" id="robotSubVal">HOME · 空闲</div>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-label">处理要求</div>
+        <div class="stat-value alarm-stat-sla">&lt; 2 秒</div>
+        <div class="stat-sub">急停后故障报警响应</div>
+    </div>
+</div>
+
+<div class="panel alarm-stack">
+    <h2>故障处理</h2>
+    <p class="hint">
+        1. 触摸屏急停按下；2. 机械臂按下急停后，故障报警时间小于 2 秒；3. 复位后方可重新启动产线。
+        <span data-admin-only>可在「设备管理」模拟急停，或在此直接下发。</span>
+    </p>
+    <div class="alarm-actions" data-admin-only>
+        <button type="button" class="btn btn-red" data-action="alarm">模拟急停</button>
+        <button type="button" class="btn" data-action="reset">复位故障</button>
+        <button type="button" class="btn btn-amber" data-action="inject">⚡ 演练: 注入ST04故障</button>
+        <button type="button" class="btn btn-clear" data-action="clear">✓ 清除工位故障</button>
+    </div>
+</div>
+
+<div class="panel alarm-stack">
+    <h2>异常记录</h2>
+    <div class="log-list alarm-log-list" id="alarmLogList">
+        <div class="empty">正在加载异常记录...</div>
+    </div>
+</div>
+
+<script src="./static/js/alarms.js"></script>

@@ -1,0 +1,97 @@
+<!-- production.html — 品质追溯分析页面片段 -->
+<div class="panel overview-banner">
+    <div>
+        <h2>生产品质总览与统计分析</h2>
+        <p class="hint overview-sub">统计口径：按日聚合生产趋势、各工位质量分布与全工序追溯记录</p>
+    </div>
+    <div class="overview-actions">
+        <a href="javascript:void(0)" onclick="exportOrdersCSV()" class="top-tool-btn csv-link">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            导出工单报表 (CSV)
+        </a>
+        <a href="javascript:void(0)" onclick="exportTraceCSV()" class="top-tool-btn csv-link">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            导出质量追溯链 (CSV)
+        </a>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card cyan">
+        <div class="stat-label">计划产量</div>
+        <div class="stat-value" id="prodPlanned">--</div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-label">合格产量</div>
+        <div class="stat-value" id="prodCompleted">--</div>
+    </div>
+    <div class="stat-card red">
+        <div class="stat-label">不良数量</div>
+        <div class="stat-value" id="prodNg">--</div>
+    </div>
+    <div class="stat-card purple">
+        <div class="stat-label">一次合格率</div>
+        <div class="stat-value" id="prodYield">--%</div>
+    </div>
+</div>
+
+<div class="grid-2 production-stack">
+    <div class="panel">
+        <h2>产量趋势</h2>
+        <div class="chart-box"><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="panel">
+        <h2>工位产出分布</h2>
+        <div class="chart-box"><canvas id="stationChart"></canvas></div>
+    </div>
+</div>
+
+<div class="panel production-stack">
+    <h2>工单完成情况</h2>
+    <div class="table-responsive" role="region" aria-label="生产记录" tabindex="0">
+    <table>
+        <thead>
+            <tr>
+                <th>订单编号</th>
+                <th>产品</th>
+                <th>计划</th>
+                <th>进度</th>
+                <th>合格</th>
+                <th>不良</th>
+                <th>当前工位</th>
+                <th>状态</th>
+                <th>下发时间</th>
+            </tr>
+        </thead>
+        <tbody id="prodOrdersBody">
+            <tr><td colspan="9" class="empty">正在加载工单数据...</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <div class="empty" id="prodOrdersEmpty" style="display:none;">暂无生产数据。</div>
+</div>
+
+<div class="panel production-stack">
+    <h2>工位作业记录</h2>
+    <div class="table-responsive" role="region" aria-label="生产记录" tabindex="0">
+    <table>
+        <thead>
+            <tr>
+                <th>时间</th>
+                <th>工单</th>
+                <th>工位</th>
+                <th>合格</th>
+                <th>不良</th>
+                <th>判定</th>
+            </tr>
+        </thead>
+        <tbody id="prodRecordsBody">
+            <tr><td colspan="6" class="empty">正在加载工位记录...</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <div class="empty" id="prodRecordsEmpty" style="display:none;">产线运行后将在此显示各工位节拍与判定结果。</div>
+</div>
+
+<script src="./static/js/production.js"></script>
+<script src="./static/js/progress.js"></script>

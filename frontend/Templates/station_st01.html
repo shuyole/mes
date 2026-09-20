@@ -1,0 +1,74 @@
+<!-- station_st01.html — ST01 自动上料工作站专用监控页片段 -->
+<div class="st01-hero">
+    <div class="st01-hero-icon">ST01</div>
+    <div class="st01-hero-info">
+        <div class="st01-hero-title">自动上料工作站 (OP10)</div>
+        <div class="st01-hero-sub">治具底座载具定位 · 外壳底座自动取料吸附 · 光电防呆识别 · PLC 保持寄存器 HR10~HR17</div>
+    </div>
+    <span class="st01-hero-tag" id="heroStatusTag">加载中</span>
+</div>
+
+<div class="st01-grid">
+    <!-- PLC 连接卡片 -->
+    <div class="st01-card col-plc">
+        <div class="st01-card-title">PLC 通讯状态</div>
+        <div class="plc-status-row">
+            <span class="plc-dot" id="plcDot"></span>
+            <span id="plcStatusText" class="plc-status-text">检测中...</span>
+        </div>
+        <div class="plc-info-item"><span class="k">IP 地址</span><span class="v" id="plcIp">127.0.0.1</span></div>
+        <div class="plc-info-item"><span class="k">端口</span><span class="v" id="plcPort">502</span></div>
+        <div class="plc-info-item"><span class="k">从站地址</span><span class="v">Modbus TCP · 默认</span></div>
+        <div class="plc-info-item"><span class="k">工位寄存器基址</span><span class="v" id="plcBase">HR10</span></div>
+        <div class="plc-info-item"><span class="k">最近读时间</span><span class="v" id="plcLast">--</span></div>
+        <div class="plc-info-item"><span class="k">错误信息</span><span class="v plc-err-text" id="plcErr">--</span></div>
+    </div>
+
+    <!-- 工位状态卡片 -->
+    <div class="st01-card col-status">
+        <div class="st01-card-title">工位实时状态</div>
+        <div class="status-big">
+            <div class="status-big-label">当前状态</div>
+            <div class="status-big-value" id="statusBig">--</div>
+        </div>
+        <div class="plc-info-item"><span class="k">工单号</span><span class="v" id="orderNo">--</span></div>
+        <div class="plc-info-item"><span class="k">累计过站量</span><span class="v"><b id="processedQty" class="processed-num">0</b> 件</span></div>
+        <div class="plc-info-item"><span class="k">节拍工时</span><span class="v" id="cycleSec">-- s/件</span></div>
+        <div class="plc-info-item"><span class="k">产线运行</span><span class="v" id="lineRun">--</span></div>
+        <div class="plc-info-item"><span class="k">产线报警</span><span class="v" id="lineAlarm">--</span></div>
+    </div>
+
+    <!-- 传感器卡片 -->
+    <div class="st01-card col-sensors">
+        <div class="st01-card-title">关键传感器 I/O</div>
+        <div id="sensorsWrap">
+            <div class="st01-loading">加载中...</div>
+        </div>
+    </div>
+
+    <!-- 寄存器卡片 -->
+    <div class="st01-card col-regs">
+        <div class="st01-card-title">PLC 保持寄存器 (HR10~HR17)</div>
+        <div class="regs-grid" id="regsWrap">
+            <div class="st01-loading">加载中...</div>
+        </div>
+    </div>
+
+    <!-- 工艺参数卡片 -->
+    <div class="st01-card col-params">
+        <div class="st01-card-title">工艺参数与标准</div>
+        <div id="paramsWrap">
+            <div class="st01-loading">加载中...</div>
+        </div>
+        <div class="st01-note">
+            <div class="st01-note-label">工艺动作要点</div>
+            <div id="descText" class="st01-note-text">--</div>
+        </div>
+        <div class="st01-note warn">
+            <div class="st01-note-label">质量判定标准</div>
+            <div id="qcText" class="st01-note-text">--</div>
+        </div>
+    </div>
+</div>
+
+<script src="./static/js/station_st01.js"></script>

@@ -1,0 +1,56 @@
+<!-- login.html — 登录页面片段（全页面模式，不使用 SPA 壳） -->
+<canvas id="particles-bg"></canvas>
+
+<div class="login-page">
+    <div class="login-header">
+        <div class="login-header-icon">MES</div>
+        <div>
+            <div class="login-header-title">智能无线充 MES 系统</div>
+            <div class="login-header-sub">制造执行系统 / Manufacturing Execution System</div>
+        </div>
+        <span class="login-header-tag">COMMAND CENTER</span>
+    </div>
+
+    <div class="login-card">
+        <div class="login-card-top"></div>
+        <div class="login-card-body">
+            <div class="login-card-title">身份验证</div>
+            <div class="login-card-sub">AUTHENTICATION REQUIRED · 请输入您的账号凭据</div>
+
+            <div class="error-msg" role="alert" id="loginError" style="display:none;"></div>
+
+            <form id="loginForm" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="username">账号</label>
+                    <input type="text" id="username" name="username" placeholder="USERNAME" data-hint="请输入账号" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="PASSWORD" data-hint="请输入密码" required>
+                </div>
+                <div class="form-group">
+                    <label for="captcha">验证码</label>
+                    <div class="captcha-row">
+                        <img id="captcha-img" alt="验证码" title="点击刷新">
+                        <input type="text" id="captcha" name="captcha" placeholder="CAPTCHA" data-hint="请输入验证码" required>
+                    </div>
+                </div>
+
+                <div class="quick-row">
+                    <span class="role-tag role-tag-admin">⚡ 管理员 · 全权限</span>
+                    <span class="role-tag role-tag-user">👤 操作员 · 产线操作</span>
+                </div>
+
+                <button type="submit" class="login-submit">进 入 系 统</button>
+            </form>
+
+            <div class="login-footer">
+                还没有账号？<a href="#/register">注册</a>
+                &nbsp;·&nbsp;
+                <a href="#/forgot_password">忘记密码？</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./static/js/login.js"></script>

@@ -1,0 +1,87 @@
+/* line.css —— 在制追踪 / 虚拟产线页（line.html）专属样式
+   全局选项卡、工序轨、机台图样式在 app.css；本文件只收敛本页操作区的局部样式。 */
+
+/* 数字孪生两栏区与底部面板的页内间距 */
+.twin-grid {
+    margin-bottom: 14px;
+}
+.factory-stage {
+    margin-top: 12px;
+}
+.line-stack {
+    margin-top: 16px;
+}
+
+/* 工序步/机台节点可点击打开工位诊断抽屉 */
+.process-step,
+.station-node {
+    cursor: pointer;
+}
+
+/* 工位流程底部操作按钮行 */
+.line-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* 故障演练按钮：红色描边 */
+.btn.btn-fault {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
+}
+.btn.btn-fault:hover {
+    background: rgba(239, 68, 68, 0.10);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+}
+
+/* 清除故障按钮：绿色描边 */
+.btn.btn-clear {
+    border-color: rgba(52, 211, 153, 0.4);
+    color: #34d399;
+}
+.btn.btn-clear:hover {
+    background: rgba(52, 211, 153, 0.10);
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
+}
+
+/* 青色描边的演示/辅助按钮（与顶栏工具钮同色系） */
+.btn.btn-demo {
+    color: var(--cyan, #22d3ee);
+    border-color: rgba(34, 211, 238, 0.4);
+}
+.btn.btn-demo:hover {
+    background: rgba(34, 211, 238, 0.08);
+}
+
+/* 选项卡里的灰色说明文字 */
+.tab-panel .tab-note {
+    color: var(--muted, #6b8ea3);
+}
+
+/* 追溯选项卡头部：标题与导出按钮两端对齐 */
+.trace-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.trace-head p {
+    color: var(--muted, #6b8ea3);
+    margin: 0;
+}
+.csv-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+/* 机械臂任务卡数值字号 */
+.robot-task-value {
+    font-size: 18px;
+}
