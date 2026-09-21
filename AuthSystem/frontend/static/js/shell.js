@@ -1,92 +1,44 @@
-/**
- * shell.js —— 主页/设置页共用的外壳脚本
- * 负责：页面登录守卫、顶栏用户信息与时钟、侧边栏底部信息、退出登录。
- * 未登录或会话失效时（/api/me 返回 401）直接跳回登录页。
- */
-(function () {
-    "use strict";
+// 检查本地是否有已登录的用户信息
+let userStr = localStorage.getItem("user");
+if (!userStr) {
+    // 未登录则跳转到登录页
+    window.location.href = "/login";
+}
+let currentUser = JSON.parse(userStr || "{}");
 
-    let _user = null;
+// 时钟刷新
+function updateClock() {
+    let el = document.getElementById("clock");
+    if (el) el.textContent = new Date().toTimeString().split(" ")[0];
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-    /** 退出登录：清空后端会话后回到登录页 */
-    async function logout() {
-        try {
-            await apiPost('/api/logout', {});
-        } catch (e) {
-            // 退出失败也照常跳转
-        }
-        window.location.href = '/login';
-    }
+// 将用户信息展示在页面上
+function renderUser() {
+    let name = currentUser.display_name || currentUser.username;
+    if (document.getElementById("userName")) document.getElementById("userName").textContent = name;
+    if (document.getElementById("roleChip")) document.getElementById("roleChip").textContent = currentUser.role_label;
 
-    /** 顶栏时钟：每秒刷新一次 */
-    function startClock() {
-        const el = document.getElementById('clock');
-        if (!el) return;
-        const pad = (n) => String(n).padStart(2, '0');
-        function tick() {
-            const d = new Date();
-            el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-        }
-        tick();
-        setInterval(tick, 1000);
-    }
+    if (document.getElementById("statAccount")) document.getElementById("statAccount").textContent = currentUser.username;
+    if (document.getElementById("statRole")) document.getElementById("statRole").textContent = currentUser.role_label;
+    if (document.getElementById("statStatus")) document.getElementById("statStatus").textContent = "启用";
+    if (document.getElementById("statLoginStatus")) document.getElementById("statLoginStatus").textContent = "有效在线";
 
-    /** 把用户信息渲染到顶栏、侧边栏底部以及各页面的可选占位符 */
-    function renderUser(user) {
-        const name = user.display_name || user.username;
+    if (document.getElementById("infoUsername")) document.getElementById("infoUsername").textContent = currentUser.username;
+    if (document.getElementById("infoDisplayName")) document.getElementById("infoDisplayName").textContent = name;
+    if (document.getElementById("infoRole")) document.getElementById("infoRole").textContent = currentUser.role_label;
 
-        const nameEl = document.getElementById('userName');
-        if (nameEl) nameEl.textContent = name;
+    if (document.getElementById("currentAccount")) document.getElementById("currentAccount").textContent = currentUser.username;
+    if (document.getElementById("currentRoleLabel")) document.getElementById("currentRoleLabel").textContent = currentUser.role_label;
+}
+renderUser();
 
-        const chip = document.getElementById('roleChip');
-        if (chip) {
-            chip.textContent = user.role_label;
-            chip.className = 'role-chip ' + (user.is_admin ? 'admin' : 'member');
-        }
-
-        const footer = document.querySelector('.sidebar-footer');
-        if (footer) {
-            footer.innerHTML = `<strong>无线充柔性线</strong>${user.is_admin ? '管理员权限' : '操作员权限'}`;
-        }
-
-        // 页面上的可选占位符：存在才填充，不存在就跳过
-        const values = {
-            statAccount: user.username,
-            statRole: user.role_label,
-            statStatus: '启用',
-            statSession: '有效',
-            infoUsername: user.username,
-            infoDisplayName: name,
-            infoRole: user.role_label,
-            currentAccount: user.username,
-            currentRoleLabel: user.role_label,
-        };
-        Object.keys(values).forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = values[id];
-        });
-    }
-
-    /** 页面启动：绑定时钟与退出按钮，校验登录态后渲染信息 */
-    async function boot() {
-        startClock();
-
-        const logoutLink = document.getElementById('logoutLink');
-        if (logoutLink) logoutLink.addEventListener('click', logout);
-
-        try {
-            _user = await apiGet('/api/me');
-        } catch (err) {
-            window.location.href = '/login';
-            return;
-        }
-        renderUser(_user);
-        // 通知页面脚本：外壳已就绪，用户信息已可用
-        document.dispatchEvent(new CustomEvent('shell:ready', { detail: _user }));
-    }
-
-    window.getShellUser = () => _user;
-    window.shellLogout = logout;
-
-    boot();
-})();
+// 退出登录
+let logoutBtn = document.getElementById("logoutLink");
+if (logoutBtn) {
+    logoutBtn.onclick = function () {
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+    };
+}

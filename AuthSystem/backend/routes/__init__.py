@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """业务 API 蓝图汇总与注册模块。"""
 
-from routes.auth import auth_bp
+from .auth import auth_bp
 
 
 def register_routes(app):

@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系统设置 - 用户认证系统</title>
+    <title>系统设置</title>
     <link rel="stylesheet" href="/static/css/shell.css">
 </head>
 <body data-page="settings">
-<!-- 系统设置页：修改登录密码入口放在这里（点击按钮弹出改密弹窗） -->
 <div class="app-shell">
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="brand-mark">AUTH</div>
             <div>
                 <h1>用户认证系统</h1>
-                <p>统一身份认证平台</p>
+                <p>统一管理后台</p>
             </div>
         </div>
 
-        <nav class="sidebar-nav" aria-label="主导航">
-            <div class="nav-group-caption">系统 / SYSTEM</div>
+        <nav class="sidebar-nav">
+            <div class="nav-group-caption">系统菜单</div>
             <a href="/home" class="side-link">
                 <svg class="nav-svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 <span>系统主页</span>
@@ -30,17 +29,17 @@
             </a>
         </nav>
 
-        <div class="sidebar-footer"><strong>无线充柔性线</strong>统一认证服务</div>
+        <div class="sidebar-footer">用户认证服务</div>
     </aside>
 
     <div class="workspace">
         <div class="topbar">
-            <div class="topbar-title">系统设置 · 账号与安全</div>
+            <div class="topbar-title">用户认证系统 · 设置中心</div>
             <div class="topbar-controls">
                 <div class="user-box">
                     <span class="clock" id="clock">--:--:--</span>
-                    <span>操作员 <b id="userName">加载中</b><span class="role-chip member" id="roleChip">--</span></span>
-                    <a class="btn-logout" href="javascript:void(0)" id="logoutLink">退出</a>
+                    <span>用户 <b id="userName">加载中</b><span class="role-chip member" id="roleChip">--</span></span>
+                    <a class="btn-logout" href="javascript:void(0)" id="logoutLink">退出登录</a>
                 </div>
             </div>
         </div>
@@ -48,27 +47,26 @@
         <main class="page-content">
             <header class="page-heading">
                 <div>
-                    <div class="page-eyebrow">SYSTEM / SETTINGS</div>
                     <h1>系统设置</h1>
                 </div>
-                <div class="page-context"><b>账号与安全</b>管理你的登录凭据</div>
+                <div class="page-context">账号与安全设置</div>
             </header>
 
             <div class="grid-2">
                 <div class="panel">
-                    <h2>账号与安全</h2>
-                    <p class="hint">当前账号：<span id="currentAccount">--</span>（<span id="currentRoleLabel">--</span>）</p>
-                    <div class="settings-stack">
+                    <h2>安全设置</h2>
+                    <p class="hint">当前登录账号：<span id="currentAccount">--</span>（<span id="currentRoleLabel">--</span>）</p>
+                    <div class="settings-stack" style="margin-top:16px;">
                         <button type="button" class="btn btn-solid" id="openChangePwdBtn">修改登录密码</button>
                     </div>
                 </div>
                 <div class="panel">
-                    <h2>权限说明</h2>
+                    <h2>使用说明</h2>
                     <p class="hint">
-                        <b class="role-admin">管理员</b>：系统内置的超级账号，拥有全部管理权限。<br>
-                        <b class="role-member">普通成员</b>：自助注册的账号，可登录系统并修改自己的密码。
+                        <b>管理员</b>：系统预设账号，用于初始配置与管理。<br>
+                        <b>普通成员</b>：自主注册账号，可登录主页与自主修改密码。
                     </p>
-                    <p class="hint" style="margin:0;">忘记密码时，可在登录页点击「忘记密码」，用注册时填写的学号核验身份后重置。</p>
+                    <p class="hint" style="margin-top:10px;">如果遗忘密码，请前往登录页面通过学号找回密码。</p>
                 </div>
             </div>
         </main>
@@ -77,24 +75,24 @@
 
 <!-- 修改密码弹窗 -->
 <div class="modal-mask" id="changePwdMask">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="changePwdTitle">
-        <h3 id="changePwdTitle">修改登录密码</h3>
-        <form id="changePwdForm" class="modal-form" onsubmit="return false;">
+    <div class="modal-box">
+        <h3>修改密码</h3>
+        <form id="changePwdForm" class="modal-form">
             <div class="form-group">
                 <label for="cpOld">旧密码</label>
-                <input type="password" id="cpOld" name="old_password" autocomplete="current-password" required>
+                <input type="password" id="cpOld" name="old_password" placeholder="请输入当前密码" required>
             </div>
             <div class="form-group">
                 <label for="cpNew">新密码</label>
-                <input type="password" id="cpNew" name="new_password" minlength="6" placeholder="至少 6 位" autocomplete="new-password" required>
+                <input type="password" id="cpNew" name="new_password" minlength="6" placeholder="请输入至少 6 位新密码" required>
             </div>
             <div class="form-group">
                 <label for="cpConfirm">确认新密码</label>
-                <input type="password" id="cpConfirm" name="confirm" minlength="6" autocomplete="new-password" required>
+                <input type="password" id="cpConfirm" name="confirm" minlength="6" placeholder="请再次输入新密码" required>
             </div>
             <p class="modal-msg" id="changePwdMsg"></p>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-solid" id="changePwdSubmit">确认修改</button>
+                <button type="submit" class="btn btn-solid">确认修改</button>
                 <button type="button" class="btn" id="changePwdCancel">取消</button>
             </div>
         </form>

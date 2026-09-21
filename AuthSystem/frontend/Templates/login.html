@@ -1,109 +1,65 @@
-<!-- 文档类型声明：告诉浏览器按 HTML5 标准模式渲染（不写会进入怪异模式，盒模型等行为不同） -->
 <!DOCTYPE html>
-<!-- 文档根元素；lang="zh-CN" 声明页面语言为简体中文，影响字体选择、拼写检查与读屏发音 -->
 <html lang="zh-CN">
-<!-- head：存放元信息与资源引用，内容不会直接显示在页面上 -->
 <head>
-    <!-- 字符编码声明为 UTF-8，必须尽早出现，否则页面中文会乱码 -->
     <meta charset="UTF-8">
-    <!-- 移动端视口设置：宽度跟随设备、初始缩放 1 倍（不写这行手机上会按桌面宽度缩小显示） -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 浏览器标签页标题 -->
-    <title>系统登录 - 用户认证系统</title>
-    <!-- 公共基础样式：全局重置、CSS 变量、通用组件，由前端静态服务（6031）提供 -->
+    <title>用户登录</title>
     <link rel="stylesheet" href="/static/css/base.css">
-    <!-- 登录页专属样式：页面布局、登录卡片、验证码行等 -->
     <link rel="stylesheet" href="/static/css/login.css">
 </head>
-<!-- body：页面可见内容的容器 -->
 <body>
-<!-- 登录页：深蓝科技风面板，含图形验证码 -->
-<!-- 粒子背景画布：铺在整个页面底层，由 particles.js 在其上绘制动态粒子动画 -->
+
 <canvas id="particles-bg"></canvas>
 
-<!-- 登录页最外层容器：负责整体居中与页面间距 -->
 <div class="login-page">
-    <!-- 顶部标题栏：左侧图标、中间标题、右侧标签 -->
     <div class="login-header">
-        <!-- 左侧方形图标，内容直接是文字 AUTH -->
         <div class="login-header-icon">AUTH</div>
-        <!-- 标题文字容器，包裹主标题与副标题 -->
         <div>
-            <!-- 系统主标题 -->
             <div class="login-header-title">用户认证系统</div>
-            <!-- 副标题：中英文对照，纯展示 -->
-            <div class="login-header-sub">统一身份认证 / Authentication System</div>
+            <div class="login-header-sub">登录控制台</div>
         </div>
-        <!-- 右上角英文标签，属于装饰性文案 -->
-        <span class="login-header-tag">COMMAND CENTER</span>
+        <span class="login-header-tag">欢迎登录</span>
     </div>
 
-    <!-- 登录卡片：承载表单的主体面板 -->
     <div class="login-card">
-        <!-- 卡片顶部的一条装饰色条（纯样式元素，无内容） -->
         <div class="login-card-top"></div>
-        <!-- 卡片内容区：标题、错误提示、表单、底部链接都放在这里 -->
         <div class="login-card-body">
-            <!-- 卡片标题 -->
-            <div class="login-card-title">身份验证</div>
-            <!-- 卡片副标题：提示用户输入账号凭据 -->
-            <div class="login-card-sub">AUTHENTICATION REQUIRED · 请输入您的账号凭据</div>
+            <div class="login-card-title">账号登录</div>
+            <div class="login-card-sub">请输入您的用户名和密码</div>
 
-            <!-- 错误提示框：role="alert" 让读屏软件在文字出现时立即朗读；内联 display:none 使其初始不占位 -->
-            <div class="error-msg" role="alert" id="loginError" style="display:none;"></div>
+            <div class="error-msg" id="loginError" style="display:none;"></div>
 
-            <!-- 登录表单：id 供 login.js 绑定提交事件；onsubmit="return false;" 先阻断浏览器原生提交（JS 内还会再 preventDefault 后走 fetch） -->
-            <form id="loginForm" onsubmit="return false;">
-                <!-- 账号输入组 -->
+            <form id="loginForm">
                 <div class="form-group">
-                    <!-- label 的 for 指向输入框 id，点击文字即可聚焦输入框（无障碍也依赖这个关联） -->
-                    <label for="username">账号</label>
-                    <!-- 文本输入框：name 让它以 form.username 被 JS 读取；required 触发浏览器原生非空校验；data-hint 是自定义提示文案 -->
-                    <input type="text" id="username" name="username" placeholder="USERNAME" data-hint="请输入账号" required>
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名" required>
                 </div>
-                <!-- 密码输入组 -->
                 <div class="form-group">
-                    <!-- 密码标签 -->
                     <label for="password">密码</label>
-                    <!-- type="password" 让输入内容以圆点显示；name=password 供 JS 读取 -->
-                    <input type="password" id="password" name="password" placeholder="PASSWORD" data-hint="请输入密码" required>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
                 </div>
-                <!-- 验证码输入组 -->
                 <div class="form-group">
-                    <!-- 验证码标签 -->
                     <label for="captcha">验证码</label>
-                    <!-- 图片与输入框左右并排的横向布局容器 -->
                     <div class="captcha-row">
-                        <!-- 验证码图片：src 由 login.js 赋值为 http://<当前主机>:8090/api/captcha；
-                             alt 是图片加载失败时的替代文字，title 是鼠标悬停提示「点击刷新」 -->
-                        <img id="captcha-img" alt="验证码" title="点击刷新">
-                        <!-- 验证码输入框：name=captcha，提交时随表单一起被 login.js 取出 -->
-                        <input type="text" id="captcha" name="captcha" placeholder="CAPTCHA" data-hint="请输入验证码" required>
+                        <img id="captcha-img" alt="验证码" title="点击刷新验证码">
+                        <input type="text" id="captcha" name="captcha" placeholder="输入验证码" required>
                     </div>
                 </div>
 
-                <!-- 提交按钮：type="submit" 触发表单提交事件；类名 login-submit 供 login.js 在请求期间置灰防重复点击 -->
-                <button type="submit" class="login-submit">进 入 系 统</button>
+                <button type="submit" class="login-submit">登 录</button>
             </form>
 
-            <!-- 底部辅助链接区 -->
             <div class="login-footer">
-                <!-- 跳转到注册页，由前端静态服务（6031）的 /register 路由渲染 -->
-                还没有账号？<a href="/register">注册</a>
-                <!-- &nbsp; 是不换行空格，用作「·」两侧的间隔，避免折行错位 -->
+                还没有账号？<a href="/register">立即注册</a>
                 &nbsp;·&nbsp;
-                <!-- 跳转到找回密码页 -->
-                <a href="/forgot_password">忘记密码？</a>
+                <a href="/forgot_password">找回密码</a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 接口封装层：定义全局 API_BASE、apiGet、apiPost，必须第一个加载，后面的脚本才能用到 -->
 <script src="/static/js/api.js"></script>
-<!-- 背景粒子动画脚本：在上面的 #particles-bg 画布上绘制动态粒子 -->
 <script src="/static/js/particles.js"></script>
-<!-- 登录页业务脚本：刷新验证码、收集表单、调用 /api/login、处理成功与失败；依赖前两个脚本 -->
 <script src="/static/js/login.js"></script>
 </body>
 </html>

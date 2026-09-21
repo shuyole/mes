@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>系统主页 - 用户认证系统</title>
+    <title>系统主页</title>
     <link rel="stylesheet" href="/static/css/shell.css">
 </head>
 <body data-page="home">
-<!-- 登录后的系统主页：左侧菜单 + 顶栏 + 内容区（复用 MES 深色工业风） -->
 <div class="app-shell">
     <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="brand-mark">AUTH</div>
             <div>
                 <h1>用户认证系统</h1>
-                <p>统一身份认证平台</p>
+                <p>统一管理后台</p>
             </div>
         </div>
 
-        <nav class="sidebar-nav" aria-label="主导航">
-            <div class="nav-group-caption">系统 / SYSTEM</div>
+        <nav class="sidebar-nav">
+            <div class="nav-group-caption">系统菜单</div>
             <a href="/home" class="side-link active">
                 <svg class="nav-svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 <span>系统主页</span>
@@ -30,17 +29,17 @@
             </a>
         </nav>
 
-        <div class="sidebar-footer"><strong>无线充柔性线</strong>统一认证服务</div>
+        <div class="sidebar-footer">用户认证服务</div>
     </aside>
 
     <div class="workspace">
         <div class="topbar">
-            <div class="topbar-title">智能制造执行系统 · 认证门户</div>
+            <div class="topbar-title">用户认证系统</div>
             <div class="topbar-controls">
                 <div class="user-box">
                     <span class="clock" id="clock">--:--:--</span>
-                    <span>操作员 <b id="userName">加载中</b><span class="role-chip member" id="roleChip">--</span></span>
-                    <a class="btn-logout" href="javascript:void(0)" id="logoutLink">退出</a>
+                    <span>用户 <b id="userName">加载中</b><span class="role-chip member" id="roleChip">--</span></span>
+                    <a class="btn-logout" href="javascript:void(0)" id="logoutLink">退出登录</a>
                 </div>
             </div>
         </div>
@@ -48,10 +47,9 @@
         <main class="page-content">
             <header class="page-heading">
                 <div>
-                    <div class="page-eyebrow">AUTH / HOME</div>
                     <h1>系统主页</h1>
                 </div>
-                <div class="page-context"><b>统一身份认证平台</b>登录成功，欢迎回来</div>
+                <div class="page-context">欢迎登录用户认证系统</div>
             </header>
 
             <div class="grid-4">
@@ -68,28 +66,28 @@
                     <div class="stat-value" id="statStatus">--</div>
                 </div>
                 <div class="stat-card purple">
-                    <div class="stat-label">会话状态</div>
-                    <div class="stat-value" id="statSession">--</div>
+                    <div class="stat-label">登录状态</div>
+                    <div class="stat-value" id="statLoginStatus">--</div>
                 </div>
             </div>
 
             <div class="grid-2 settings-stack">
                 <div class="panel">
-                    <h2>账号信息</h2>
+                    <h2>个人信息</h2>
                     <table class="info-table">
-                        <tr><th>登录账号</th><td id="infoUsername">--</td></tr>
-                        <tr><th>显示名称</th><td id="infoDisplayName">--</td></tr>
+                        <tr><th>登录用户名</th><td id="infoUsername">--</td></tr>
+                        <tr><th>用户昵称</th><td id="infoDisplayName">--</td></tr>
                         <tr><th>角色权限</th><td id="infoRole">--</td></tr>
                     </table>
                 </div>
                 <div class="panel">
-                    <h2>服务与端口</h2>
+                    <h2>服务端口信息</h2>
                     <table class="info-table">
-                        <tr><th>前端页面服务</th><td>http://127.0.0.1:6031</td></tr>
-                        <tr><th>后端接口服务</th><td>http://127.0.0.1:8090</td></tr>
+                        <tr><th>前端页面</th><td>http://127.0.0.1:6031</td></tr>
+                        <tr><th>后端接口</th><td>http://127.0.0.1:8090</td></tr>
                         <tr><th>数据库服务</th><td>http://127.0.0.1:6070</td></tr>
                     </table>
-                    <p class="hint" style="margin:14px 0 0;">接口连通正常，账号数据由数据库服务统一读写。</p>
+                    <p class="hint" style="margin-top:10px;">所有服务已正常启动，页面与后端数据连通。</p>
                 </div>
             </div>
         </main>
