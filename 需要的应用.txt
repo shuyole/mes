@@ -1,0 +1,23 @@
+用户认证与权限管理系统 (AuthSystem) - 需要的应用清单
+
+1. 操作系统：
+   - Windows 10 / Windows 11 (64位)
+
+2. Python 环境（必须）：
+   - Python 3.10 或更高版本
+   - 官方下载：https://www.python.org/downloads/
+   - 注意：安装时请务必勾选 "Add python.exe to PATH"
+
+3. Web 浏览器（必须）：
+   - Google Chrome / Microsoft Edge / Firefox 等现代浏览器
+
+4. 数据库软件（可选）：
+   - 默认采用系统自带的 SQLite（无需安装任何软件，开箱即用）
+   - 若想使用 MySQL，可安装 MySQL 8.0+（推荐Navicat或DataGrip作为可视化工具，可选）
+
+5. Python 依赖包（双击 start.bat 或运行 pip install -r requirements.txt 自动安装）：
+   - Flask
+   - Flask-CORS
+   - requests
+   - PyMySQL
+   - Pillow
