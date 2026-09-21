@@ -1,99 +1,106 @@
-<!-- settings.html — 基础数据配置页面片段 -->
-<div class="grid-2">
-    <div class="panel">
-        <h2>设备与通讯</h2>
-        <div id="settingsMsg" class="settings-ok" style="display:none;"></div>
-        <p>数据库：
-            <span class="badge badge-idle" id="dbStatusBadge">检测中…</span>
-        </p>
-        <p>PLC：
-            <span class="badge badge-alarm" id="plcStatusBadge">离线（本地仿真可用）</span>
-        </p>
-        <p>产线：
-            <span class="badge badge-idle" id="lineStatusBadge">停止</span>
-        </p>
-        <div data-admin-only>
-            <form class="settings-form" id="plcConfigForm" onsubmit="return false;">
-                <div class="form-group">
-                    <label>PLC IP</label>
-                    <input name="plc_ip" id="plcIpInput" value="127.0.0.1">
-                </div>
-                <div class="form-group">
-                    <label>PLC 端口</label>
-                    <input name="plc_port" id="plcPortInput" type="number" value="502">
-                </div>
-                <button class="btn btn-solid" type="submit" id="plcSaveSubmit">保存通讯参数</button>
-            </form>
-            <p class="hint">保存后立即重连，并写入 config.json，重启服务仍然有效。</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置</title>
+    <link rel="stylesheet" href="/static/css/shell.css">
+</head>
+<body data-page="settings">
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-mark">AUTH</div>
+            <div>
+                <h1>用户认证系统</h1>
+                <p>统一管理后台</p>
+            </div>
         </div>
-        <div data-member-only style="display:none;">
-            <p class="hint">通讯参数仅管理员可修改。当前 PLC：<span id="plcAddrReadonly">127.0.0.1:502</span></p>
-        </div>
-    </div>
-    <div class="panel">
-        <h2>权限说明</h2>
-        <p class="hint">
-            <b class="role-admin">管理员</b>：下单、下发产线、强制完工、删除工单、PLC 启停/写寄存器、改通讯参数、管理账号。<br>
-            <b class="role-member">普通成员</b>：查看看板与生产数据、提交工单、强制完工、删除工单。不能下发产线、控制设备或管理系统。
-        </p>
-        <p>当前账号：<span id="currentAccount">--</span>（<span id="currentRoleLabel">--</span>）<br>
-            页面服务端口：<span id="cfgFrontendPort">6021</span>　接口服务端口：<span id="cfgBackendPort">8080</span></p>
-        <div class="settings-stack">
-            <button type="button" class="btn btn-solid" id="openChangePwdBtn">修改登录密码</button>
-            <p class="hint" data-admin-only>账号启停、角色与重置他人密码请到 <a href="#/users" class="settings-link">用户管理</a>。</p>
-        </div>
-    </div>
-</div>
 
-<div class="grid-2 settings-stack">
-    <div class="panel">
-        <h2>产品基础数据</h2>
-        <div class="table-responsive" role="region" aria-label="基础数据明细" tabindex="0">
-        <table>
-            <thead><tr><th>编码</th><th>名称</th><th>型号</th><th>节拍</th></tr></thead>
-            <tbody id="settingsProductsBody">
-                <tr><td colspan="4" class="empty">正在加载产品数据...</td></tr>
-            </tbody>
-        </table>
+        <nav class="sidebar-nav">
+            <div class="nav-group-caption">系统菜单</div>
+            <a href="/home" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>系统主页</span>
+            </a>
+            <a href="/settings" class="side-link active">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                <span>系统设置</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">用户认证服务</div>
+    </aside>
+
+    <div class="workspace">
+        <div class="topbar">
+            <div class="topbar-title">用户认证系统 · 设置中心</div>
+            <div class="topbar-controls">
+                <div class="user-box">
+                    <span class="clock" id="clock">--:--:--</span>
+                    <span>用户 <b id="userName">加载中</b><span class="role-chip member" id="roleChip">--</span></span>
+                    <a class="btn-logout" href="javascript:void(0)" id="logoutLink">退出登录</a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="panel">
-        <h2>工位基础数据</h2>
-        <div class="table-responsive" role="region" aria-label="基础数据明细" tabindex="0">
-        <table>
-            <thead><tr><th>编号</th><th>工艺</th><th>工作站</th><th>角色</th><th>节拍</th><th>寄存器</th></tr></thead>
-            <tbody id="settingsStationsBody">
-                <tr><td colspan="6" class="empty">正在加载工位数据...</td></tr>
-            </tbody>
-        </table>
-        </div>
+
+        <main class="page-content">
+            <header class="page-heading">
+                <div>
+                    <h1>系统设置</h1>
+                </div>
+                <div class="page-context">账号与安全设置</div>
+            </header>
+
+            <div class="grid-2">
+                <div class="panel">
+                    <h2>安全设置</h2>
+                    <p class="hint">当前登录账号：<span id="currentAccount">--</span>（<span id="currentRoleLabel">--</span>）</p>
+                    <div class="settings-stack" style="margin-top:16px;">
+                        <button type="button" class="btn btn-solid" id="openChangePwdBtn">修改登录密码</button>
+                    </div>
+                </div>
+                <div class="panel">
+                    <h2>使用说明</h2>
+                    <p class="hint">
+                        <b>管理员</b>：系统预设账号，用于初始配置与管理。<br>
+                        <b>普通成员</b>：自主注册账号，可登录主页与自主修改密码。
+                    </p>
+                    <p class="hint" style="margin-top:10px;">如果遗忘密码，请前往登录页面通过学号找回密码。</p>
+                </div>
+            </div>
+        </main>
     </div>
 </div>
 
 <!-- 修改密码弹窗 -->
 <div class="modal-mask" id="changePwdMask">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="changePwdTitle">
-        <h3 id="changePwdTitle">修改登录密码</h3>
-        <form id="changePwdForm" class="modal-form" onsubmit="return false;">
+    <div class="modal-box">
+        <h3>修改密码</h3>
+        <form id="changePwdForm" class="modal-form">
             <div class="form-group">
                 <label for="cpOld">旧密码</label>
-                <input type="password" id="cpOld" name="old_password" autocomplete="current-password" required>
+                <input type="password" id="cpOld" name="old_password" placeholder="请输入当前密码" required>
             </div>
             <div class="form-group">
                 <label for="cpNew">新密码</label>
-                <input type="password" id="cpNew" name="new_password" minlength="6" placeholder="至少 6 位" autocomplete="new-password" required>
+                <input type="password" id="cpNew" name="new_password" minlength="6" placeholder="请输入至少 6 位新密码" required>
             </div>
             <div class="form-group">
                 <label for="cpConfirm">确认新密码</label>
-                <input type="password" id="cpConfirm" name="confirm" minlength="6" autocomplete="new-password" required>
+                <input type="password" id="cpConfirm" name="confirm" minlength="6" placeholder="请再次输入新密码" required>
             </div>
             <p class="modal-msg" id="changePwdMsg"></p>
             <div class="modal-actions">
-                <button type="submit" class="btn btn-solid" id="changePwdSubmit">确认修改</button>
+                <button type="submit" class="btn btn-solid">确认修改</button>
                 <button type="button" class="btn" id="changePwdCancel">取消</button>
             </div>
         </form>
     </div>
 </div>
 
-<script src="./static/js/settings.js"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/shell.js"></script>
+<script src="/static/js/settings.js"></script>
+</body>
+</html>

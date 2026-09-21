@@ -1,96 +1,100 @@
-<!-- home.html — 数据采集与监控页面片段 -->
-<div class="monitor" id="monitor">
-    <header class="monitor-heading">
-        <div><div class="monitor-eyebrow">MES / LIVE PRODUCTION</div><h1>产线数据监控<span>无线充组装线</span></h1></div>
-        <div class="monitor-actions">
-            <button type="button" class="monitor-button monitor-button-demo" onclick="seedDemoOrders()">⚡ 快速生成演示工单</button>
-            <span class="signal" id="syncStatus" role="status">正在同步</span>
-            <span class="sync-time" id="syncTime">--:--:--</span>
-            <button type="button" class="monitor-button" id="refreshMonitor">刷新数据</button>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统主页</title>
+    <link rel="stylesheet" href="/static/css/shell.css">
+</head>
+<body data-page="home">
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-mark">AUTH</div>
+            <div>
+                <h1>用户认证系统</h1>
+                <p>统一管理后台</p>
+            </div>
         </div>
-    </header>
-    <div class="monitor-notice" id="monitorNotice" role="status" hidden></div>
-    <section class="monitor-kpis monitor-kpis--fit" aria-label="生产关键指标">
-        <article class="monitor-kpi"><div class="kpi-label">累计合格产量 <span>ALL ORDERS</span></div><div class="kpi-number" id="metricCompleted">--</div><div class="kpi-foot">计划总量 <b id="metricPlanned">--</b> 件</div></article>
-        <article class="monitor-kpi"><div class="kpi-label">生产任务 <span>WORK ORDERS</span></div><div class="kpi-number" id="metricOrders">--</div><div class="kpi-foot">生产中 <b id="metricRunning">--</b><span>待生产 <b id="metricPending">--</b></span></div></article>
-        <article class="monitor-kpi quality"><div class="kpi-label">累计合格率 <span>QUALITY</span></div><div class="kpi-number"><span id="metricYield">--</span><small>%</small></div><div class="kpi-foot">不良数量 <b id="metricNg">--</b> 件</div></article>
-        <article class="monitor-kpi monitor-kpi--oee"><div class="kpi-label">设备综合效率 <span>OEE METRIC</span></div><div class="kpi-number kpi-number--oee"><span id="metricOee">89.4</span><small>%</small></div><div class="kpi-foot">开动率 <b>96%</b> · 性能 <b>95%</b></div></article>
-        <article class="monitor-kpi takt"><div class="kpi-label">目标生产节拍 <span>TAKT TIME</span></div><div class="kpi-number" id="taktTime">24<small>秒 / 件</small></div><div class="kpi-foot">需求 <span id="taktDemand">1200</span> 件 / 天<span id="taktShifts">2 班制</span></div></article>
-    </section>
-    <div class="monitor-main">
-        <section class="monitor-line" aria-labelledby="lineHeading">
-            <div class="monitor-section-heading">
-                <h2 id="lineHeading"><span class="section-index">01</span>产线实时状态</h2>
-                <div class="line-state-row">
-                    <span class="status-label" id="lineState">同步中</span>
+
+        <nav class="sidebar-nav">
+            <div class="nav-group-caption">系统菜单</div>
+            <a href="/home" class="side-link active">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>系统主页</span>
+            </a>
+            <a href="/settings" class="side-link">
+                <svg class="nav-svg-icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                <span>系统设置</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">用户认证服务</div>
+    </aside>
+
+    <div class="workspace">
+        <div class="topbar">
+            <div class="topbar-title">用户认证系统</div>
+            <div class="topbar-controls">
+                <div class="user-box">
+                    <span class="clock" id="clock">--:--:--</span>
+                    <span>用户 <b id="userName">加载中</b><span class="role-chip member" id="roleChip">--</span></span>
+                    <a class="btn-logout" href="javascript:void(0)" id="logoutLink">退出登录</a>
                 </div>
             </div>
-            <div class="work-order-strip"><div><span>当前工单</span><strong id="currentOrder">暂无在制工单</strong></div><div><span>产品</span><strong id="currentProduct">--</strong></div><a href="#/line">在制追踪 &rarr;</a></div>
-            <div class="station-deck" id="stationDeck">
-                <button type="button" class="monitor-station" data-index="0" data-code="ST01" data-state="离线" aria-pressed="true" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST01</span><span class="station-status">离线</span></span>
-                    <span class="machine v1" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST01 自动上料</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
-                <button type="button" class="monitor-station" data-index="1" data-code="ST02" data-state="离线" aria-pressed="false" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST02</span><span class="station-status">离线</span></span>
-                    <span class="machine v2" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST02 视觉检测</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
-                <button type="button" class="monitor-station" data-index="2" data-code="ST03" data-state="离线" aria-pressed="false" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST03</span><span class="station-status">离线</span></span>
-                    <span class="machine v3" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST03 激光打标</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
-                <button type="button" class="monitor-station" data-index="3" data-code="ST04" data-state="离线" aria-pressed="false" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST04</span><span class="station-status">离线</span></span>
-                    <span class="machine v4" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST04 自动锁附</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
-                <button type="button" class="monitor-station" data-index="4" data-code="ST05" data-state="离线" aria-pressed="false" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST05</span><span class="station-status">离线</span></span>
-                    <span class="machine v5" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST05 胶水涂覆</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
-                <button type="button" class="monitor-station" data-index="5" data-code="ST06" data-state="离线" aria-pressed="false" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST06</span><span class="station-status">离线</span></span>
-                    <span class="machine v6" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST06 固化装配</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
-                <button type="button" class="monitor-station" data-index="6" data-code="ST07" data-state="离线" aria-pressed="false" title="点击查看工位详情与传感器遥测">
-                    <span class="station-top"><span class="station-code">ST07</span><span class="station-status">离线</span></span>
-                    <span class="machine v7" aria-hidden="true"><span class="arm"></span><span class="head"></span><span class="hmi"></span><span class="body"></span><span class="led"></span></span>
-                    <strong>ST07 终检下线</strong><span class="station-count">过站 <b>0</b></span>
-                </button>
+        </div>
+
+        <main class="page-content">
+            <header class="page-heading">
+                <div>
+                    <h1>系统主页</h1>
+                </div>
+                <div class="page-context">欢迎登录用户认证系统</div>
+            </header>
+
+            <div class="grid-4">
+                <div class="stat-card cyan">
+                    <div class="stat-label">当前账号</div>
+                    <div class="stat-value" id="statAccount">--</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label">身份角色</div>
+                    <div class="stat-value" id="statRole">--</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-label">账号状态</div>
+                    <div class="stat-value" id="statStatus">--</div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-label">登录状态</div>
+                    <div class="stat-value" id="statLoginStatus">--</div>
+                </div>
             </div>
-            <div class="station-detail" id="stationDetail">
-                <span>工位详情</span>
-                <strong>正在同步工位数据</strong>
+
+            <div class="grid-2 settings-stack">
+                <div class="panel">
+                    <h2>个人信息</h2>
+                    <table class="info-table">
+                        <tr><th>登录用户名</th><td id="infoUsername">--</td></tr>
+                        <tr><th>用户昵称</th><td id="infoDisplayName">--</td></tr>
+                        <tr><th>角色权限</th><td id="infoRole">--</td></tr>
+                    </table>
+                </div>
+                <div class="panel">
+                    <h2>服务端口信息</h2>
+                    <table class="info-table">
+                        <tr><th>前端页面</th><td>http://127.0.0.1:6031</td></tr>
+                        <tr><th>后端接口</th><td>http://127.0.0.1:8090</td></tr>
+                        <tr><th>数据库服务</th><td>http://127.0.0.1:6070</td></tr>
+                    </table>
+                    <p class="hint" style="margin-top:10px;">所有服务已正常启动，页面与后端数据连通。</p>
+                </div>
             </div>
-            <div class="line-progress-heading"><span>当前工单完成进度</span><strong id="orderProgressText">0 / 0 件</strong></div>
-            <div class="monitor-progress" role="progressbar" aria-label="当前工单完成进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="orderProgress"><span></span></div>
-            <div class="line-bottom"><span>工位总数 <b id="stationTotal">7</b></span><span>运行 <b id="stationRunning">--</b></span><span>故障 <b id="stationFault">--</b></span><span>离线 <b id="stationOffline">--</b></span><span class="line-bottom-end">真实产线 / PLC</span></div>
-        </section>
-        <aside class="monitor-telemetry">
-            <div class="monitor-section-heading"><h2><span class="section-index">02</span>采集与设备</h2><span class="protocol-label">MODBUS TCP</span></div>
-            <div class="telemetry-heading"><span>PLC 通讯</span><strong class="status-label" id="plcState">同步中</strong></div>
-            <dl class="telemetry-list"><div><dt>设备地址</dt><dd id="plcAddress">--</dd></div><div><dt>最近成功读取</dt><dd id="plcReadTime">--</dd></div><div><dt>累计读取次数</dt><dd id="plcReadCount">--</dd></div></dl>
-            <div class="telemetry-heading"><span>协作机械臂</span><strong id="robotState">--</strong></div>
-            <dl class="telemetry-list"><div><dt>当前位置</dt><dd id="robotPosition">--</dd></div><div><dt>当前任务</dt><dd id="robotTask">--</dd></div></dl>
-            <div class="monitor-alert" id="equipmentAlert" data-level="idle"><span class="alert-marker">!</span><div><strong id="alertTitle">等待设备数据</strong><p id="alertMessage">--</p></div></div>
-            <div class="telemetry-links"><a href="#/hmi" data-admin-only>设备管理 &rarr;</a><a href="#/alarms">异常管理 &rarr;</a></div>
-        </aside>
+        </main>
     </div>
-    <div class="monitor-lower">
-        <section class="monitor-orders">
-            <div class="monitor-section-heading"><h2><span class="section-index">03</span>工单概览</h2><a href="#/orders">全部工单 &rarr;</a></div>
-            <div class="monitor-table-wrap"><table class="monitor-table"><thead><tr><th>工单 / 产品</th><th>完成 / 计划</th><th>状态</th></tr></thead><tbody id="monitorOrdersBody">
-            <tr><td colspan="3" class="monitor-empty">正在加载工单...</td></tr>
-            </tbody></table></div><div class="section-footnote">工单列表为页面打开时快照 · 实时进度见上方在制工单</div>
-        </section>
-        <section class="monitor-events"><div class="monitor-section-heading"><h2><span class="section-index">04</span>运行事件</h2><span class="event-meta" id="eventStatus">最近 6 条</span></div><div id="monitorEvents" class="event-list"><div class="monitor-empty">正在读取运行事件</div></div></section>
-    </div>
-    <footer class="monitor-footer"><span><span class="footer-dot"></span> MES 数据采集中心</span><span>页面刷新周期 2 秒 · 统计口径：全部工单累计</span></footer>
 </div>
 
-<script src="./static/js/home.js"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/shell.js"></script>
+</body>
+</html>

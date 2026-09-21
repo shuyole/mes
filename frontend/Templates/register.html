@@ -1,53 +1,69 @@
-<!-- register.html — 注册页面片段 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body>
+
 <canvas id="particles-bg"></canvas>
 
 <div class="register-page">
     <div class="login-header">
-        <div class="login-header-icon">MES</div>
+        <div class="login-header-icon">AUTH</div>
         <div>
-            <div class="login-header-title">智能无线充 MES 系统</div>
-            <div class="login-header-sub">制造执行系统 / Manufacturing Execution System</div>
+            <div class="login-header-title">用户认证系统</div>
+            <div class="login-header-sub">新用户注册</div>
         </div>
-        <span class="login-header-tag">NEW ACCOUNT</span>
+        <span class="login-header-tag">账号注册</span>
     </div>
 
     <div class="register-card">
         <div class="register-card-top"></div>
         <div class="register-card-body">
             <div class="register-card-title">创建账号</div>
-            <div class="register-card-sub">CREATE NEW ACCOUNT · 填写以下信息完成注册</div>
+            <div class="register-card-sub">请填写以下信息完成注册</div>
 
-            <div class="error-msg" role="alert" id="registerError" style="display:none;"></div>
+            <div class="error-msg" id="registerError" style="display:none;"></div>
+            <div class="success-msg" id="registerOk" style="display:none;"></div>
 
-            <form id="registerForm" onsubmit="return false;">
+            <form id="registerForm">
                 <div class="form-group">
-                    <label for="reg_username">账号 USERNAME</label>
-                    <input type="text" id="reg_username" name="username" placeholder="3-20 位字母数字下划线" data-hint="请输入账号" required>
+                    <label for="reg_username">用户名</label>
+                    <input type="text" id="reg_username" name="username" placeholder="请输入用户名" required>
                 </div>
                 <div class="form-group">
-                    <label for="reg_display_name">显示名称 DISPLAY NAME</label>
-                    <input type="text" id="reg_display_name" name="display_name" placeholder="例如：张工">
+                    <label for="reg_display_name">显示昵称</label>
+                    <input type="text" id="reg_display_name" name="display_name" placeholder="请输入姓名或昵称">
                 </div>
                 <div class="form-group">
-                    <label for="reg_student_id">学号 STUDENT ID <span class="hint">（找回密码用，请牢记）</span></label>
-                    <input type="text" id="reg_student_id" name="student_id" placeholder="4-20 位字母或数字" data-hint="请输入学号" required>
+                    <label for="reg_student_id">学号（找回密码凭据）</label>
+                    <input type="text" id="reg_student_id" name="student_id" placeholder="请输入您的学号" required>
                 </div>
                 <div class="form-group">
-                    <label for="reg_password">密码 PASSWORD</label>
-                    <input type="password" id="reg_password" name="password" placeholder="至少 6 位" data-hint="请输入密码" minlength="6" required>
+                    <label for="reg_password">登录密码</label>
+                    <input type="password" id="reg_password" name="password" placeholder="请输入至少 6 位密码" required>
                 </div>
                 <div class="form-group">
-                    <label for="reg_confirm">确认密码 CONFIRM</label>
-                    <input type="password" id="reg_confirm" name="confirm" placeholder="再次输入密码" data-hint="请再次输入密码" required>
+                    <label for="reg_confirm">确认密码</label>
+                    <input type="password" id="reg_confirm" name="confirm" placeholder="请再次输入密码" required>
                 </div>
-                <button type="submit" class="register-submit">注 册 账 号</button>
+
+                <button type="submit" class="register-submit">立即注册</button>
             </form>
 
             <div class="register-footer">
-                已有账号？<a href="#/login">返回登录</a>
+                已有账号？<a href="/login">返回登录</a>
             </div>
         </div>
     </div>
 </div>
 
-<script src="./static/js/register.js"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/particles.js"></script>
+<script src="/static/js/register.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-/* register.css —— 成员注册页（register.html）专属科技面板样式
+/* register.css —— 注册页（register.html）专属科技面板样式
    与 login.css 同款深蓝底 + 粒子/网格/扫描线动效，面板使用 register-* 命名。 */
 
 body { background: #040a18 !important; }
@@ -56,7 +56,7 @@ body { background: #040a18 !important; }
     width: 40px; height: 40px; border-radius: 10px;
     background: linear-gradient(135deg, #22d3ee, #3b82f6);
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: bold; color: #041018;
+    font-size: 13px; font-weight: bold; color: #041018;
     box-shadow: 0 0 16px rgba(34,211,238,0.5);
 }
 .login-header-title { font-size: 18px; font-weight: 700; letter-spacing: 1px; color: #e2f2f8; }
